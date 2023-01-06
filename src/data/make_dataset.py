@@ -92,9 +92,11 @@ class NewsDataset(Dataset):
         # load row
         row = self.df.iloc[0]
         text = row["text"]
-        encoding = self.tokenizer(text)
+        label = row["label"]
+        encoding = self.tokenizer(text, return_token_type_ids=False)
         encoding.pop("token_type_ids", None)
-        return encoding
+
+        return encoding, label
 
 
 if __name__ == "__main__":
@@ -108,4 +110,7 @@ if __name__ == "__main__":
     # load up the .env entries as environment variables
     load_dotenv(find_dotenv())
 
-    main()
+    df = pd.DataFrame({"text": ["crazy text", "less crazy text"], "label": [1, 0]})
+    dataset = NewsDataset(df)
+    print(dataset.__getitem__(0))
+    # main()
