@@ -8,4 +8,7 @@ import transformers
 
 def test_get_tokenizer():
     tokenizer = get_tokenizer()
-    assert type(tokenizer) == transformers.AlbertTokenizer
+    assert (
+        type(tokenizer)
+        == transformers.models.albert.tokenization_albert_fast.AlbertTokenizerFast
+    )
