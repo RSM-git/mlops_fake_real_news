@@ -109,7 +109,4 @@ if __name__ == "__main__":
     # load up the .env entries as environment variables
     load_dotenv(find_dotenv())
 
-    df = pd.DataFrame({"text": ["crazy text", "less crazy text"], "label": [1, 0]})
-    dataset = NewsDataset(df)
-    print(dataset.__getitem__(0))
-    # main()
+    main()
