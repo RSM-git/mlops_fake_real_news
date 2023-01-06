@@ -1,8 +1,8 @@
 ## Machine Learning Operations project description - NLP with fake and real news articles
 
-Casper Brun Pedersen - s204119
-Marcus Presutti - s204122
-Rasmus Steen Mikkelsen - s204135
+Casper Brun Pedersen - s204119 <br>
+Marcus Presutti - s204122 <br>
+Rasmus Steen Mikkelsen - s204135 <br>
 Victor Tolsager Olesen - s204141
 
 ### Overall goal of the project

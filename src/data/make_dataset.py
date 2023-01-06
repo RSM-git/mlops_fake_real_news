@@ -6,6 +6,12 @@ from dotenv import find_dotenv, load_dotenv
 import os
 import zipfile
 
+from torch.utils.data import Dataset
+import pandas as pd
+import torch
+import os
+import transformers
+
 
 @click.command()
 @click.argument("input_filepath", type=click.Path(exists=True))
@@ -58,6 +64,33 @@ def load_kaggle(input_filepath, zipped_filepath, output_filepath):
         zip_ref.extractall(unzipped_folder_raw)
     with zipfile.ZipFile(os.path.join(zipped_filepath, "True.csv.zip"), "r") as zip_ref:
         zip_ref.extractall(unzipped_folder_raw)
+
+
+def get_tokenizer() -> transformers.AlbertTokenizerFast:
+    path_tokenizers = "tokenizers"
+    tokenizer_type = "albert"
+    path_tokenizer = os.path.join(path_tokenizers, tokenizer_type)
+    if not os.path.exists(path_tokenizer):
+        tokenizer = transformers.AutoTokenizer.from_pretrained(tokenizer_type)
+        tokenizer.save_pretrained(path_tokenizer)
+    else:
+        tokenizer = transformers.AutoTokenizer.from_pretrained(path_tokenizer)
+    return
+
+
+class NewsDataset(Dataset):
+    def __init__(self, df: pd.DataFrame):
+        super().__init__()
+        self.df = df
+        self.tokenizer = transformers
+
+    def __len__(self):
+        return len(self.df)
+
+    def __getitem__(self, index: int) -> dict[str : torch.Tensor]:
+        # load row
+        row = self.df.iloc[0]
+        text = row["text"]
 
 
 if __name__ == "__main__":
