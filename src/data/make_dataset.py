@@ -9,8 +9,8 @@ import zipfile
 from torch.utils.data import Dataset
 import pandas as pd
 import torch
-import os
 import transformers
+import numpy as np
 
 
 @click.command()
@@ -68,29 +68,34 @@ def load_kaggle(input_filepath, zipped_filepath, output_filepath):
 
 def get_tokenizer() -> transformers.AlbertTokenizerFast:
     path_tokenizers = "tokenizers"
-    tokenizer_type = "albert"
+    tokenizer_type = "albert-base-v2"
     path_tokenizer = os.path.join(path_tokenizers, tokenizer_type)
     if not os.path.exists(path_tokenizer):
         tokenizer = transformers.AutoTokenizer.from_pretrained(tokenizer_type)
         tokenizer.save_pretrained(path_tokenizer)
     else:
         tokenizer = transformers.AutoTokenizer.from_pretrained(path_tokenizer)
-    return
+
+    return tokenizer
 
 
 class NewsDataset(Dataset):
     def __init__(self, df: pd.DataFrame):
         super().__init__()
         self.df = df
-        self.tokenizer = transformers
+        self.tokenizer = get_tokenizer()  # transformers
 
     def __len__(self):
         return len(self.df)
 
-    def __getitem__(self, index: int) -> dict[str : torch.Tensor]:
+    def __getitem__(self, index: int) -> tuple[dict[str : torch.Tensor], np.int64]:
         # load row
         row = self.df.iloc[0]
         text = row["text"]
+        label = row["label"]
+        encoding = self.tokenizer(text, return_token_type_ids=False)
+
+        return encoding, label
 
 
 if __name__ == "__main__":
