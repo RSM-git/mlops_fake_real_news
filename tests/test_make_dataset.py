@@ -11,17 +11,8 @@ def test_NewsDataset_label():
     dataset = NewsDataset(df)
 
     # label type
-    assert type(dataset.__getitem__(0)[1]) in [
-        int,
-        np.int8,
-        np.int16,
-        np.int32,
-        np.int64,
-        np.uint8,
-        np.uint16,
-        np.uint32,
-        np.uint64,
-    ]
+    assert type(dataset.__getitem__(0)[1]) == np.int64
+
     # label value
     assert dataset.__getitem__(0)[1] == 1
 

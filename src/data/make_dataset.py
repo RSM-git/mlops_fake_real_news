@@ -9,8 +9,8 @@ import zipfile
 from torch.utils.data import Dataset
 import pandas as pd
 import torch
-import os
 import transformers
+import numpy as np
 
 
 @click.command()
@@ -88,7 +88,7 @@ class NewsDataset(Dataset):
     def __len__(self):
         return len(self.df)
 
-    def __getitem__(self, index: int) -> dict[str : torch.Tensor]:
+    def __getitem__(self, index: int) -> tuple[dict[str : torch.Tensor], np.int64]:
         # load row
         row = self.df.iloc[0]
         text = row["text"]
