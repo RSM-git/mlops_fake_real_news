@@ -1,57 +1,24 @@
-mlops_real_fake_news
-==============================
+## Machine Learning Operations project description - NLP with fake and real news articles
 
-Project repository for the DTU course Machine Learning Operations
+Casper Brun Pedersen - 
+Marcus Presutti -
+Rasmus Steen Mikkelsen - 
+Victor Tolsager Olesen -
 
-Project Organization
-------------
+### Overall goal of the project
 
-    ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
-    ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
-    │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
-    │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
-    ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
-    │
-    └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
+The goal of the project is to develop a MLOps pipeline for classifying news articles as either fake or real using Transformers.
 
+### What framework are you going to use (PyTorch Image Models, Transformers, PyTorch-Geometrics)
 
---------
+The model will be trained on text data, which prompts the use of the Transformers framework.
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+### How do you intend to include the framework in your project?
+
+The transformers framework contains a multitude of pretrained models. We intend to fine-tune the pretrained ALBERT transformer
+
+### What data are you going to run on? (initially, may change)
+
+We will be using a Kaggle dataset, specifically the [Fake and real news dataset](https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset). The dataset consists of two `.csv` files `Fake.csv` and `True.csv`, which will be merged into a single dataset, each sample initially has four attributes: `title`, `text`, `subject`, and `date`, and will naturally get a label attribute based on which file the sampled was initially in.
+
+### What deep learning models do you expect to use?
