@@ -68,21 +68,22 @@ def load_kaggle(input_filepath, zipped_filepath, output_filepath):
 
 def get_tokenizer() -> transformers.AlbertTokenizerFast:
     path_tokenizers = "tokenizers"
-    tokenizer_type = "albert"
+    tokenizer_type = "albert-base-v2"
     path_tokenizer = os.path.join(path_tokenizers, tokenizer_type)
     if not os.path.exists(path_tokenizer):
         tokenizer = transformers.AutoTokenizer.from_pretrained(tokenizer_type)
         tokenizer.save_pretrained(path_tokenizer)
     else:
         tokenizer = transformers.AutoTokenizer.from_pretrained(path_tokenizer)
-    return
+
+    return tokenizer
 
 
 class NewsDataset(Dataset):
     def __init__(self, df: pd.DataFrame):
         super().__init__()
         self.df = df
-        self.tokenizer = transformers
+        self.tokenizer = get_tokenizer()  # transformers
 
     def __len__(self):
         return len(self.df)
@@ -91,6 +92,9 @@ class NewsDataset(Dataset):
         # load row
         row = self.df.iloc[0]
         text = row["text"]
+        encoding = self.tokenizer(text)
+        encoding.pop("token_type_ids", None)
+        return encoding
 
 
 if __name__ == "__main__":
