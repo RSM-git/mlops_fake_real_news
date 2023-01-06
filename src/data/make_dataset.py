@@ -94,7 +94,6 @@ class NewsDataset(Dataset):
         text = row["text"]
         label = row["label"]
         encoding = self.tokenizer(text, return_token_type_ids=False)
-        encoding.pop("token_type_ids", None)
 
         return encoding, label
 
