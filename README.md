@@ -19,6 +19,8 @@ The transformers framework contains a multitude of pretrained models. We intend 
 
 ### What data are you going to run on? (initially, may change)
 
-We will be using a Kaggle dataset, specifically the [Fake and real news dataset](https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset). The dataset consists of two `.csv` files `Fake.csv` and `True.csv`, which will be merged into a single dataset, each sample initially has four attributes: `title`, `text`, `subject`, and `date`, and will naturally get a label attribute based on which file the sampled was initially in.
+We will be using a Kaggle dataset, specifically the [Fake and real news dataset](https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset). The dataset consists of two `.csv` files `Fake.csv` and `True.csv`, which will be merged into a single dataset, each sample initially has four attributes: `title`, `text`, `subject`, and `date`, and will naturally get a label attribute based on which file the sample was initially in.
 
 ### What deep learning models do you expect to use?
+
+We have intentions of using the pretrained [ALBERT](https://huggingface.co/docs/transformers/model_doc/albert) from huggingface, which will be fine-tuned using the fake and real news dataset. ALBERT performs parameter reduction techniques to lower memory consumption and increase training speed of the original [BERT](https://huggingface.co/docs/transformers/model_doc/bert) model.
