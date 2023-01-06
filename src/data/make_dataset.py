@@ -17,13 +17,15 @@ def main(input_filepath, output_filepath):
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
 
-    # TODO: do checks before loading kaggle
-    # ...
+    # Check if zipped folder exists, before loading data files
+    zipped_filepath = input_filepath + "/zip_folder"
+    if os.path.isdir(zipped_filepath):
+        load_kaggle(input_filepath, zipped_filepath, output_filepath)
+    else:
+        print("Files already exist")
 
-    load_kaggle(input_filepath, output_filepath)
 
-
-def load_kaggle(input_filepath, output_filepath):
+def load_kaggle(input_filepath, zipped_filepath, output_filepath):
     # Load environment variables
     project_dir = os.path.join(os.path.dirname(__file__), os.pardir)
     dotenv_path = os.path.join(project_dir, ".env")
@@ -39,23 +41,22 @@ def load_kaggle(input_filepath, output_filepath):
     api = kaggle.api
 
     # Download zipped data
-    zip_folder = input_filepath + "/zip_folder"
     kaggle.api.dataset_download_file(
         "clmentbisaillon/fake-and-real-news-dataset",
         "Fake.csv",
-        path=zip_folder,
+        path=zipped_filepath,
     )
     kaggle.api.dataset_download_file(
         "clmentbisaillon/fake-and-real-news-dataset",
         "True.csv",
-        path=zip_folder,
+        path=zipped_filepath,
     )
 
     # Unzip data
     unzipped_folder_raw = input_filepath
-    with zipfile.ZipFile(os.path.join(zip_folder, "Fake.csv.zip"), "r") as zip_ref:
+    with zipfile.ZipFile(os.path.join(zipped_filepath, "Fake.csv.zip"), "r") as zip_ref:
         zip_ref.extractall(unzipped_folder_raw)
-    with zipfile.ZipFile(os.path.join(zip_folder, "True.csv.zip"), "r") as zip_ref:
+    with zipfile.ZipFile(os.path.join(zipped_filepath, "True.csv.zip"), "r") as zip_ref:
         zip_ref.extractall(unzipped_folder_raw)
 
 
