@@ -4,6 +4,10 @@ __pycache__/
 *$py.class
 .vscode
 
+# Data files
+*.csv
+*.zip
+
 # C extensions
 *.so
 
