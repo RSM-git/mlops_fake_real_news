@@ -11,6 +11,9 @@ __pycache__/
 # Tokenizers
 tokenizers/
 
+# Hydra output
+outputs/
+
 # C extensions
 *.so
 
