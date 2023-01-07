@@ -17,3 +17,5 @@ transformers
 pandas
 torch
 pytest
+hydra-core
+pytorch-lightning
