@@ -88,14 +88,15 @@ class NewsDataset(Dataset):
     def __len__(self):
         return len(self.df)
 
-    def __getitem__(self, index: int) -> tuple[dict[str : torch.Tensor], np.int64]:
+    def __getitem__(self, index: int) -> dict[str : torch.Tensor]:
         # load row
         row = self.df.iloc[0]
         text = row["text"]
         label = row["label"]
         encoding = self.tokenizer(text, return_token_type_ids=False)
+        encoding["label"] = label
 
-        return encoding, label
+        return encoding
 
 
 if __name__ == "__main__":
