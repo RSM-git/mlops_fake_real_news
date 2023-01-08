@@ -4,20 +4,19 @@ import torchmetrics
 from pytorch_lightning import LightningModule
 from torch.utils.data import DataLoader
 from transformers import AutoModelForSequenceClassification
+from src import models
 
 
 class FakeNewsClassifier(LightningModule):
     def __init__(
         self,
-        model: str = "albert-base-v2",
+        model_type: str = "albert-base-v2",
         num_classes: int = 2,
         batch_size: int = 32,
         lr: int = 2e-5,
     ):
         super().__init__()
-        self.model = AutoModelForSequenceClassification.from_pretrained(
-            model, num_labels=num_classes
-        )
+        self.model = models.utils.get_model(model_type, num_labels=num_classes)
         self.criterion = nn.CrossEntropyLoss()
         self.training_metrics = nn.ModuleDict(
             [
@@ -47,7 +46,7 @@ class FakeNewsClassifier(LightningModule):
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
         labels = batch["labels"]
-        logits = self(input_ids, attention_mask)
+        logits = self.model(input_ids, attention_mask)
         loss = self.criterion(logits, labels)
 
         return loss
@@ -56,7 +55,7 @@ class FakeNewsClassifier(LightningModule):
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
         labels = batch["labels"]
-        logits = self(input_ids, attention_mask)
+        logits = self.model(input_ids, attention_mask)
         loss = self.criterion(logits, labels)
 
         return loss
@@ -65,7 +64,7 @@ class FakeNewsClassifier(LightningModule):
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
         labels = batch["labels"]
-        logits = self(input_ids, attention_mask)
+        logits = self.model(input_ids, attention_mask)
         loss = self.criterion(logits, labels)
 
         return loss

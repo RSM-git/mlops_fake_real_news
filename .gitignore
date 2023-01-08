@@ -11,6 +11,9 @@ __pycache__/
 # Tokenizers
 tokenizers/
 
+# Models
+models/
+
 # Hydra output
 outputs/
 
