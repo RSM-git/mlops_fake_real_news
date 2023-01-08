@@ -1,5 +1,6 @@
 from pytorch_lightning import Trainer, loggers
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
+from dotenv import load_dotenv
 import hydra
 
 # from mlops_fake_real_news.src.models.model import FakeNewsClassifier
@@ -11,10 +12,12 @@ import torch
 
 @hydra.main(config_name="training_conf.yaml", config_path="configs")
 def main(cfg):
+    load_dotenv()
 
     batch_size = cfg.hyperparameters.batch_size
     lr = cfg.hyperparameters.learning_rate
     seed = cfg.hyperparameters.seed
+    accelerator = cfg.hyperparameters.accelerator
 
     random.seed(seed)
     torch.manual_seed(seed)
@@ -32,7 +35,7 @@ def main(cfg):
         logger=loggers.WandbLogger(project="mlops_fake_real_news"),
     )
 
-    trainer.fit(model)
+    trainer.fit(model, accelerator=accelerator)
 
 
 if __name__ == "__main__":

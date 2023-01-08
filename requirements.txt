@@ -20,3 +20,4 @@ pytest
 hydra-core
 pytorch-lightning
 wandb
+kaggle
