@@ -12,6 +12,14 @@ def test_get_tokenizer():
     # delete "albert-base-v2" and run again
 
 
+def test_merge_csv():
+    assert type(merge_csv()) == pd.DataFrame
+
+
+def test_split():
+    pass
+
+
 def test_NewsDataset_label():
     df = pd.DataFrame(
         {"text": ["test text label 1", "test text label 0"], "label": [1, 0]}

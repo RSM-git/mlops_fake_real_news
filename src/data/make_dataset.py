@@ -11,6 +11,7 @@ import pandas as pd
 import torch
 import transformers
 import numpy as np
+from sklearn.model_selection import train_test_split
 
 
 @click.command()
@@ -77,6 +78,37 @@ def get_tokenizer() -> transformers.AlbertTokenizerFast:
         tokenizer = transformers.AutoTokenizer.from_pretrained(path_tokenizer)
 
     return tokenizer
+
+
+def merge_csv() -> pd.DataFrame:
+
+    a = pd.read_csv("Fake.csv")  # Load csv
+    b = pd.read_csv("True.csv")
+
+    # Add label column.
+    a["label"] = 0
+    b["label"] = 1
+
+    # Merge
+    merged = a.merge(b, how="outer")
+
+    merged = merged.sample(frac=1)
+    return merged.reset_index(drop=True)
+
+
+def split() -> tuple[
+    pd.DataFrame, pd.Series, pd.DataFrame, pd.Series, pd.DataFrame, pd.Series
+]:
+    # load merged csv
+    data = merge_csv()
+
+    # split data into train, split, val, test
+    # split is split up into val and test
+    y = data.label
+    X = data.drop("label", axis=1)
+    X_train, X_split, y_train, y_split = train_test_split(X, y, test_size=0.2)
+    X_val, X_test, y_val, y_test = train_test_split(X_split, y_split, test_size=0.5)
+    return X_train, y_train, X_val, y_val, X_test, y_test
 
 
 class NewsDataset(Dataset):
