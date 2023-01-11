@@ -13,11 +13,11 @@ def test_get_tokenizer():
 
 
 def test_merge_csv():
-    assert type(merge_csv()) == pd.DataFrame
+    assert isinstance(merge_csv(), pd.DataFrame)
 
 
 def test_split():
-    pass
+    assert isinstance(split(), tuple)
 
 
 def test_NewsDataset_label():
