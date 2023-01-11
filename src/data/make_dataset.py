@@ -81,10 +81,10 @@ def get_tokenizer() -> transformers.AlbertTokenizerFast:
 
 
 def merge_csv() -> pd.DataFrame:
-    a = pd.read_csv("Fake.csv")  # Load csv
-    b = pd.read_csv("True.csv")
+    a = pd.read_csv("data/raw/Fake.csv")  # Load csv
+    b = pd.read_csv("data/raw/True.csv")
 
-    # Add label column.
+    # Add label column
     a["label"] = 0
     b["label"] = 1
 
@@ -131,6 +131,7 @@ class NewsDataset(Dataset):
 
 
 if __name__ == "__main__":
+
     log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
