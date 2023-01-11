@@ -81,7 +81,6 @@ def get_tokenizer() -> transformers.AlbertTokenizerFast:
 
 
 def merge_csv() -> pd.DataFrame:
-
     a = pd.read_csv("Fake.csv")  # Load csv
     b = pd.read_csv("True.csv")
 

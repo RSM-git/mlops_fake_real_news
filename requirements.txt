@@ -21,3 +21,4 @@ hydra-core
 pytorch-lightning
 wandb
 kaggle
+scikit-learn
