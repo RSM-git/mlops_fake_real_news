@@ -22,3 +22,4 @@ pytorch-lightning
 wandb
 kaggle
 pre-commit
+scikit-learn

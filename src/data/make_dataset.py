@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 import os
 import zipfile
@@ -9,6 +8,7 @@ import pandas as pd
 import torch
 import transformers
 from dotenv import find_dotenv, load_dotenv
+from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset
 
 
@@ -27,7 +27,8 @@ def main():
 
     os.makedirs(os.path.join(input_path, "zip_folder"), exist_ok=True)
     load_kaggle(input_path)
-    split(input_path, output_path)
+    merge_csv(input_path, output_path)
+    split(output_path)
 
 
 def load_kaggle(input_path: str):
@@ -43,7 +44,7 @@ def load_kaggle(input_path: str):
         print("Kaggle API error:")
         print(e)
         exit()
-        
+
     zipped_filepath = input_path + "/zip_folder"
 
     # Download zipped data
@@ -66,8 +67,40 @@ def load_kaggle(input_path: str):
         zip_ref.extractall(unzipped_folder_raw)
 
 
-def split(input_path: str, output_path: str):
-    pass
+def merge_csv(input_path: str, output_path: str) -> pd.DataFrame:
+    a = pd.read_csv(input_path + "Fake.csv")  # Load csv
+    b = pd.read_csv(input_path + "True.csv")
+
+    # Add label column
+    a["label"] = 0
+    b["label"] = 1
+
+    # Merge
+    merged = a.merge(b, how="outer")
+    merged = merged.sample(frac=1).reset_index(drop=True)
+    merged.to_csv(output_path + "merge.csv")
+
+
+def split(
+    output_path: str,
+) -> tuple[pd.DataFrame, pd.Series, pd.DataFrame, pd.Series, pd.DataFrame, pd.Series]:
+    # load merged csv
+    data = pd.read_csv(output_path + "merge.csv", index_col=0)
+
+    # split data into train, split, val, test
+    # split is split up into val and test
+    y = data.label
+    X = data.drop("label", axis=1)
+    X_train, X_split, y_train, y_split = train_test_split(X, y, test_size=0.2)
+    X_val, X_test, y_val, y_test = train_test_split(X_split, y_split, test_size=0.5)
+
+    X_train["label"] = y_train.values
+    X_val["label"] = y_val.values
+    X_test["label"] = y_test.values
+
+    X_train.to_csv(output_path + "train.csv")
+    X_val.to_csv(output_path + "validation.csv")
+    X_test.to_csv(output_path + "test.csv")
 
 
 def get_tokenizer() -> transformers.AlbertTokenizerFast:
