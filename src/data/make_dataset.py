@@ -43,7 +43,7 @@ def load_kaggle(input_path: str):
         print("Kaggle API error:")
         print(e)
         exit()
-        
+
     zipped_filepath = input_path + "/zip_folder"
 
     # Download zipped data
