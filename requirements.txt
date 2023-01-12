@@ -22,4 +22,6 @@ pytorch-lightning
 wandb
 kaggle
 pre-commit
+wandb
+dvc[gs]
 scikit-learn
