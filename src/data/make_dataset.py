@@ -82,6 +82,7 @@ class CreateData:
         merged = a.merge(b, how="outer")
         merged = merged.sample(frac=1).reset_index(drop=True)
         path = Path(self.output_path + "merge.csv")
+        print(path)
         merged.to_csv(path)
 
     def split(self):
@@ -124,12 +125,13 @@ class NewsDataset(Dataset):
         return encoding
 
     def get_dataloader(self, type: str):
+        dir = "data/processed"
         if "train":
-            df = pd.read_csv(self.output_path + "train.csv")
+            df = pd.read_csv(dir + "train.csv")
         elif "validation":
-            df = pd.read_csv(self.output_path + "validation.csv")
+            df = pd.read_csv(dir + "validation.csv")
         elif "test":
-            df = pd.read_csv(self.output_path + "test.csv")
+            df = pd.read_csv(dir + "test.csv")
         else:
             raise "Possible types: 'train' , 'validation' , 'test' "
 
