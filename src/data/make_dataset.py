@@ -3,7 +3,7 @@ import os
 import zipfile
 from pathlib import Path
 
-import click
+# import click
 import pandas as pd
 import torch
 import transformers
@@ -12,115 +12,103 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset
 
 
-@click.command()
+# @click.command()
 # @click.argument("input_filepath", type=click.Path(exists=True))
 # @click.argument("output_filepath", type=click.Path())
-def main():
-    """Runs data processing scripts to turn raw data from (../raw) into
-    cleaned data ready to be analyzed (saved in ../processed).
-    """
-    logger = logging.getLogger(__name__)
-    logger.info("making final data set from raw data")
+class CreateData:
+    def __init__(self):
+        """Runs data processing scripts to turn raw data from (../raw) into
+        cleaned data ready to be analyzed (saved in ../processed).
+        """
+        logger = logging.getLogger(__name__)
+        logger.info("making final data set from raw data")
 
-    input_path = "data/raw/"
-    output_path = "data/processed/"
+        self.input_path = "data/raw/"
+        self.output_path = "data/processed/"
 
-    os.makedirs(os.path.join(input_path, "zip_folder"), exist_ok=True)
-    load_kaggle(input_path)
-    merge_csv(input_path, output_path)
-    split(output_path)
+        os.makedirs(os.path.join(self.input_path, "zip_folder"), exist_ok=True)
+        self.load_kaggle()
+        self.merge_csv()
+        self.split()
 
+    def load_kaggle(self):
+        # Load environment variables
+        project_dir = os.path.join(os.path.dirname(__file__), os.pardir)
+        dotenv_path = os.path.join(project_dir, ".env")
+        load_dotenv(dotenv_path)
 
-def load_kaggle(input_path: str):
-    # Load environment variables
-    project_dir = os.path.join(os.path.dirname(__file__), os.pardir)
-    dotenv_path = os.path.join(project_dir, ".env")
-    load_dotenv(dotenv_path)
+        # Check that kaggle API authentication works
+        try:
+            import kaggle
+        except OSError as e:
+            print("Kaggle API error:")
+            print(e)
+            exit()
 
-    # Check that kaggle API authentication works
-    try:
-        import kaggle
-    except OSError as e:
-        print("Kaggle API error:")
-        print(e)
-        exit()
+        zipped_filepath = self.input_path + "zip_folder"
 
-    zipped_filepath = input_path + "/zip_folder"
+        # Download zipped data
+        kaggle.api.dataset_download_file(
+            "clmentbisaillon/fake-and-real-news-dataset",
+            "Fake.csv",
+            path=zipped_filepath,
+        )
+        kaggle.api.dataset_download_file(
+            "clmentbisaillon/fake-and-real-news-dataset",
+            "True.csv",
+            path=zipped_filepath,
+        )
 
-    # Download zipped data
-    kaggle.api.dataset_download_file(
-        "clmentbisaillon/fake-and-real-news-dataset",
-        "Fake.csv",
-        path=zipped_filepath,
-    )
-    kaggle.api.dataset_download_file(
-        "clmentbisaillon/fake-and-real-news-dataset",
-        "True.csv",
-        path=zipped_filepath,
-    )
+        # Unzip data
+        unzipped_folder_raw = self.input_path
+        with zipfile.ZipFile(
+            os.path.join(zipped_filepath, "Fake.csv.zip"), "r"
+        ) as zip_ref:
+            zip_ref.extractall(unzipped_folder_raw)
+        with zipfile.ZipFile(
+            os.path.join(zipped_filepath, "True.csv.zip"), "r"
+        ) as zip_ref:
+            zip_ref.extractall(unzipped_folder_raw)
 
-    # Unzip data
-    unzipped_folder_raw = input_path
-    with zipfile.ZipFile(os.path.join(zipped_filepath, "Fake.csv.zip"), "r") as zip_ref:
-        zip_ref.extractall(unzipped_folder_raw)
-    with zipfile.ZipFile(os.path.join(zipped_filepath, "True.csv.zip"), "r") as zip_ref:
-        zip_ref.extractall(unzipped_folder_raw)
+    def merge_csv(self):
+        a = pd.read_csv(self.input_path + "Fake.csv")  # Load csv
+        b = pd.read_csv(self.input_path + "True.csv")
 
+        # Add label column
+        a["label"] = 0
+        b["label"] = 1
 
-def merge_csv(input_path: str, output_path: str) -> pd.DataFrame:
-    a = pd.read_csv(input_path + "Fake.csv")  # Load csv
-    b = pd.read_csv(input_path + "True.csv")
+        # Merge
+        merged = a.merge(b, how="outer")
+        merged = merged.sample(frac=1).reset_index(drop=True)
+        path = Path(self.output_path + "merge.csv")
+        merged.to_csv(path)
 
-    # Add label column
-    a["label"] = 0
-    b["label"] = 1
+    def split(self):
+        # load merged csv
+        data = pd.read_csv(self.output_path + "merge.csv", index_col=0)
 
-    # Merge
-    merged = a.merge(b, how="outer")
-    merged = merged.sample(frac=1).reset_index(drop=True)
-    merged.to_csv(output_path + "merge.csv")
+        # split data into train, split, val, test
+        # split is split up into val and test
+        y = data.label
+        X = data.drop("label", axis=1)
+        X_train, X_split, y_train, y_split = train_test_split(X, y, test_size=0.2)
+        X_val, X_test, y_val, y_test = train_test_split(X_split, y_split, test_size=0.5)
 
+        X_train["label"] = y_train.values
+        X_val["label"] = y_val.values
+        X_test["label"] = y_test.values
 
-def split(
-    output_path: str,
-) -> tuple[pd.DataFrame, pd.Series, pd.DataFrame, pd.Series, pd.DataFrame, pd.Series]:
-    # load merged csv
-    data = pd.read_csv(output_path + "merge.csv", index_col=0)
-
-    # split data into train, split, val, test
-    # split is split up into val and test
-    y = data.label
-    X = data.drop("label", axis=1)
-    X_train, X_split, y_train, y_split = train_test_split(X, y, test_size=0.2)
-    X_val, X_test, y_val, y_test = train_test_split(X_split, y_split, test_size=0.5)
-
-    X_train["label"] = y_train.values
-    X_val["label"] = y_val.values
-    X_test["label"] = y_test.values
-
-    X_train.to_csv(output_path + "train.csv")
-    X_val.to_csv(output_path + "validation.csv")
-    X_test.to_csv(output_path + "test.csv")
-
-
-def get_tokenizer() -> transformers.AlbertTokenizerFast:
-    path_tokenizers = "tokenizers"
-    tokenizer_type = "albert-base-v2"
-    path_tokenizer = os.path.join(path_tokenizers, tokenizer_type)
-    if not os.path.exists(path_tokenizer):
-        tokenizer = transformers.AutoTokenizer.from_pretrained(tokenizer_type)
-        tokenizer.save_pretrained(path_tokenizer)
-    else:
-        tokenizer = transformers.AutoTokenizer.from_pretrained(path_tokenizer)
-
-    return tokenizer
+        X_train.to_csv(self.output_path + "train.csv")
+        X_val.to_csv(self.output_path + "validation.csv")
+        X_test.to_csv(self.output_path + "test.csv")
 
 
 class NewsDataset(Dataset):
     def __init__(self, df: pd.DataFrame):
         super().__init__()
         self.df = df
-        self.tokenizer = get_tokenizer()  # transformers
+        self.tokenizer = self.get_tokenizer()  # transformers
 
     def __len__(self):
         return len(self.df)
@@ -135,6 +123,30 @@ class NewsDataset(Dataset):
 
         return encoding
 
+    def get_dataloader(self, type: str):
+        if "train":
+            df = pd.read_csv(self.output_path + "train.csv")
+        elif "validation":
+            df = pd.read_csv(self.output_path + "validation.csv")
+        elif "test":
+            df = pd.read_csv(self.output_path + "test.csv")
+        else:
+            raise "Possible types: 'train' , 'validation' , 'test' "
+
+        return df
+
+    def get_tokenizer(self) -> transformers.AlbertTokenizerFast:
+        path_tokenizers = "tokenizers"
+        tokenizer_type = "albert-base-v2"
+        path_tokenizer = os.path.join(path_tokenizers, tokenizer_type)
+        if not os.path.exists(path_tokenizer):
+            tokenizer = transformers.AutoTokenizer.from_pretrained(tokenizer_type)
+            tokenizer.save_pretrained(path_tokenizer)
+        else:
+            tokenizer = transformers.AutoTokenizer.from_pretrained(path_tokenizer)
+
+        return tokenizer
+
 
 if __name__ == "__main__":
     log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -147,4 +159,4 @@ if __name__ == "__main__":
     # load up the .env entries as environment variables
     load_dotenv(find_dotenv())
 
-    main()
+    Creation = CreateData()
