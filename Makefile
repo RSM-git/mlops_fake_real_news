@@ -32,6 +32,9 @@ requirements: test_environment
 data:
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py
 
+train:
+	$(PYTHON_INTERPRETER) src/model/train_model.py
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete

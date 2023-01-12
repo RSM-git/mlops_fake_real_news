@@ -34,29 +34,27 @@ remove_data_files()
 class TestCreateData:
     creator = CreateData()
 
-    def test_load_kaggle(self):
-        # get and unzip zip files
-        self.creator.load_kaggle()
+    # TODO: need to add kaggle api key secret
+    # def test_load_kaggle(self):
+    #     # get and unzip zip files
+    #     self.creator.load_kaggle()
 
-        assert os.path.exists("data/raw/Fake.csv")
-        assert os.path.exists("data/raw/True.csv")
+    #     assert os.path.exists("data/raw/Fake.csv")
+    #     assert os.path.exists("data/raw/True.csv")
 
-    pytest.mark.skipif(not os.path.exists("data/raw/train.csv"))
-
+    @pytest.mark.skipif(not os.path.exists("data/raw/train.csv"))
     def test_merge_csv(self):
         self.creator.merge_csv()
         assert os.path.exists("data/processed/merge.csv")
 
-    pytest.mark.skipif(not os.path.exists("data/processed/merge.csv"))
-
+    @pytest.mark.skipif(not os.path.exists("data/processed/merge.csv"))
     def test_split(self):
         self.creator.split()
         assert os.path.exists("data/processed/train.csv")
         assert os.path.exists("data/processed/val.csv")
         assert os.path.exists("data/processed/test.csv")
 
-    pytest.mark.skipif(not os.path.exists("data/processed/train.csv"))
-
+    @pytest.mark.skipif(not os.path.exists("data/processed/train.csv"))
     def test_get_dataloader(self):
         dl_train = self.creator.get_data_loader("train", batch_size=2)
         dl_val = self.creator.get_data_loader("val", num_workers=2)

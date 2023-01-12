@@ -47,6 +47,7 @@ class FakeNewsClassifier(pl.LightningModule):
         labels = batch["labels"]
         logits = self.model(input_ids, attention_mask)
         loss = self.criterion(logits, labels)
+        self.log(loss)
 
         return loss
 
@@ -56,8 +57,7 @@ class FakeNewsClassifier(pl.LightningModule):
         labels = batch["labels"]
         logits = self.model(input_ids, attention_mask)
         loss = self.criterion(logits, labels)
-
-        return loss
+        self.log(loss)
 
     def test_step(self, batch: dict, batch_idx: int) -> torch.Tensor:
         input_ids = batch["input_ids"]
