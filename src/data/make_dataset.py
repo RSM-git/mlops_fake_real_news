@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
-import click
 import logging
-from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
 import os
 import zipfile
+from pathlib import Path
 
-from torch.utils.data import Dataset
+import click
 import pandas as pd
 import torch
 import transformers
-import numpy as np
+from dotenv import find_dotenv, load_dotenv
+from torch.utils.data import Dataset
 
 
 @click.command()
@@ -43,8 +42,6 @@ def load_kaggle(input_filepath, zipped_filepath, output_filepath):
     except OSError as e:
         print("Kaggle API error:")
         print(e)
-
-    api = kaggle.api
 
     # Download zipped data
     kaggle.api.dataset_download_file(

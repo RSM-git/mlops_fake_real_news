@@ -1,7 +1,8 @@
-from src.data.make_dataset import *
+import numpy as np
 import pandas as pd
 import transformers
-import numpy as np
+
+from src.data.make_dataset import *
 
 
 def test_get_tokenizer():

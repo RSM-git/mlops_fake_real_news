@@ -1,5 +1,6 @@
-from src.models.utils import *
 import os
+
+from src.models.utils import *
 
 
 def test_get_model():

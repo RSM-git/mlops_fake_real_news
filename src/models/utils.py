@@ -1,5 +1,6 @@
-import transformers
 import os
+
+import transformers
 
 
 def get_model(
@@ -8,10 +9,12 @@ def get_model(
     model_dir: str = "models/pretrained_models",
 ) -> transformers.AutoModelForSequenceClassification:
     """
-    Loads a pretrained model for sequence classificadtion either from disk or huggingface and saves the pretrained model on the disk
+    Loads a pretrained model for sequence classificadtion either from disk or
+    huggingface and saves the pretrained model on the disk
     for later use
     Args:
-        model_type: Huggingface model type. Is inferred automatically if weights_name is provided
+        model_type: Huggingface model type. Is inferred automatically if
+            weights_name is provided
         model_dir: the directory that we expect the model to be storred in
     Returns:
         model: pretrained model

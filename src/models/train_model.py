@@ -1,13 +1,13 @@
-from pytorch_lightning import Trainer, loggers
-from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
-from dotenv import load_dotenv
+import random
+
 import hydra
+import torch
+from dotenv import load_dotenv
+from pytorch_lightning import Trainer, loggers
+from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
 # from mlops_fake_real_news.src.models.model import FakeNewsClassifier
 from src.models.model import FakeNewsClassifier
-
-import random
-import torch
 
 
 @hydra.main(config_name="training_conf.yaml", config_path="configs")
