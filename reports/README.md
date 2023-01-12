@@ -105,7 +105,7 @@ end of the project.
 >
 > Answer:
 
---- question 1 fill here ---
+Group 69
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -116,7 +116,7 @@ end of the project.
 >
 > Answer:
 
---- question 2 fill here ---
+s204119, s204112, s204135, s204141
 
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
@@ -129,7 +129,7 @@ end of the project.
 >
 > Answer:
 
---- question 3 fill here ---
+We chose to work with the huggingface transformers framework to perform the natural language processing task of classifying fake or real news articles, based on their titles. From huggingface we use a transformer model, specifically ALBERT, alongside its corresponding tokenizer. The tokenizer encodes the piece of text, we wish to use for our classification task, such that the transformer model can comprehend it. 
 
 ## Coding environment
 
