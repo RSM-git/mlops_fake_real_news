@@ -3,7 +3,7 @@ import torch.nn as nn
 import torchmetrics
 from pytorch_lightning import LightningModule
 from torch.utils.data import DataLoader
-from transformers import AutoModelForSequenceClassification
+
 from src import models
 
 

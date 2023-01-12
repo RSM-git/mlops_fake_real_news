@@ -15,9 +15,10 @@ pathlib2
 # our packages
 transformers
 pandas
-torch 
+torch
 pytest
 hydra-core
 pytorch-lightning
 wandb
 kaggle
+pre-commit
