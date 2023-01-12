@@ -42,19 +42,25 @@ class TestCreateData:
     #     assert os.path.exists("data/raw/Fake.csv")
     #     assert os.path.exists("data/raw/True.csv")
 
-    @pytest.mark.skipif(not os.path.exists("data/raw/train.csv"))
+    @pytest.mark.skipif(
+        not os.path.exists("data/raw/train.csv"), reason="data not found"
+    )
     def test_merge_csv(self):
         self.creator.merge_csv()
         assert os.path.exists("data/processed/merge.csv")
 
-    @pytest.mark.skipif(not os.path.exists("data/processed/merge.csv"))
+    @pytest.mark.skipif(
+        not os.path.exists("data/processed/merge.csv"), reason="data not found"
+    )
     def test_split(self):
         self.creator.split()
         assert os.path.exists("data/processed/train.csv")
         assert os.path.exists("data/processed/val.csv")
         assert os.path.exists("data/processed/test.csv")
 
-    @pytest.mark.skipif(not os.path.exists("data/processed/train.csv"))
+    @pytest.mark.skipif(
+        not os.path.exists("data/processed/train.csv"), reason="data not found"
+    )
     def test_get_dataloader(self):
         dl_train = self.creator.get_data_loader("train", batch_size=2)
         dl_val = self.creator.get_data_loader("val", num_workers=2)
