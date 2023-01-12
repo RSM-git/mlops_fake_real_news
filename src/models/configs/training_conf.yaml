@@ -3,3 +3,4 @@ hyperparameters:
   learning_rate: 2e-5
   epochs: 30
   seed: 123
+  accelerator: 'cuda'

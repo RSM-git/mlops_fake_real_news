@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from pytorch_lightning import Trainer, loggers
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
+from src.data.make_dataset import CreateData
 # from mlops_fake_real_news.src.models.model import FakeNewsClassifier
 from src.models.model import FakeNewsClassifier
 
@@ -21,6 +22,9 @@ def main(cfg):
 
     random.seed(seed)
     torch.manual_seed(seed)
+
+    # Creates initial dataset files
+    CreateData()
 
     model = FakeNewsClassifier(
         model="albert-base-v2", num_classes=2, batch_size=batch_size, lr=lr

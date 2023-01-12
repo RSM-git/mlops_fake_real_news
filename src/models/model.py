@@ -5,6 +5,7 @@ from pytorch_lightning import LightningModule
 from torch.utils.data import DataLoader
 
 from src import models
+from src.data.make_dataset import NewsDataset
 
 
 class FakeNewsClassifier(LightningModule):
@@ -36,6 +37,8 @@ class FakeNewsClassifier(LightningModule):
         )
         self.batch_size = batch_size
         self.lr = lr
+
+        self.Dataset = NewsDataset()
 
     def forward(
         self, input_ids: torch.Tensor, attention_mask: torch.Tensor
@@ -73,10 +76,13 @@ class FakeNewsClassifier(LightningModule):
         return torch.optim.AdamW(self.parameters(), lr=self.lr)
 
     def train_dataloader(self) -> torch.utils.data.DataLoader:
+        self.train_dataset = self.Dataset.get_df("train")
         return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True)
 
     def val_dataloader(self) -> torch.utils.data.DataLoader:
+        self.train_dataset = self.Dataset.get_df("validation")
         return DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=True)
 
     def test_dataloader(self) -> torch.utils.data.DataLoader:
+        self.train_dataset = self.Dataset.get_df("test")
         return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=True)
