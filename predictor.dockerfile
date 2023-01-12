@@ -20,8 +20,8 @@ COPY models/ models/
 COPY reports/ reports/
 
 # should these be included?
-COPY tests/ tests/ 
+COPY tests/ tests/
 COPY tokenizers/ tokenizers/
 
-# entrypoint 
+# entrypoint
 ENTRYPOINT ["python3", "-u", "src/models/predict_model.py"]

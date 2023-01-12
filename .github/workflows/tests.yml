@@ -2,7 +2,7 @@ name: "Run tests"
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master, main, codecov]
   pull_request:
     branches: [ master, main ]
 
@@ -26,5 +26,8 @@ jobs:
         pip install -r requirements_tests.txt
     - name: Test with pytest
       run: |
-        pip install pytest
+        pip install pytest coverage
         pytest -v
+        coverage run -m pytest tests/
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@v2
