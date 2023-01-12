@@ -2,14 +2,17 @@ import numpy as np
 import pandas as pd
 import transformers
 
-from src.data.make_dataset import *
+from src.data.make_dataset import CreateData, NewsDataset
 
 
 def test_get_tokenizer():
-
+    df = pd.DataFrame(
+        {"text": ["test text label 1", "test text label 0"], "label": [1, 0]}
+    )
+    dataset = NewsDataset(df)
     # OSError
     # "tokenizers" folder should include the "albert-base-v2" folder, as well as includes the 3 json files
-    assert get_tokenizer(), OSError
+    assert dataset.get_tokenizer(), OSError
     # delete "albert-base-v2" and run again
 
 

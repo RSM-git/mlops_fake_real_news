@@ -124,7 +124,7 @@ class NewsDataset(Dataset):
 
         return encoding
 
-    def get_dataloader(self, type: str):
+    def get_df(self, type: str):
         dir = "data/processed"
         if "train":
             df = pd.read_csv(dir + "train.csv")
