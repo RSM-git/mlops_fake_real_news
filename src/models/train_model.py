@@ -32,7 +32,7 @@ def main(cfg):
             ModelCheckpoint("models/", monitor="val_loss", filename="best_model"),
             EarlyStopping(monitor="val_loss", patience=2),
         ],
-        logger=loggers.WandbLogger(project="mlops_fake_real_news"),
+        logger=loggers.WandbLogger(project="mlops_fake_real_news", entity="crulotest"),
     )
 
     trainer.fit(model, accelerator=accelerator)
