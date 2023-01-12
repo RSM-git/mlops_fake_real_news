@@ -110,7 +110,7 @@ class CreateData:
             raise "Possible splits: 'train' , 'val' , 'test'"
 
         ds = NewsDataset(df)
-        dl = torch.utils.data.Dataloader(ds, **kwargs)
+        dl = torch.utils.data.DataLoader(ds, collate_fn=collate_fn, **kwargs)
 
         return dl
 
@@ -119,7 +119,7 @@ class NewsDataset(Dataset):
     def __init__(self, df: pd.DataFrame):
         super().__init__()
         self.df = df
-        self.tokenizer = self.get_tokenizer()  # transformers
+        self.tokenizer = get_tokenizer()  # transformers
 
     def __len__(self):
         return len(self.df)
@@ -129,10 +129,32 @@ class NewsDataset(Dataset):
         row = self.df.iloc[0]
         text = row["text"]
         label = row["label"]
-        encoding = self.tokenizer(text, return_token_type_ids=False)
-        encoding["label"] = label
+        encoding = self.tokenizer(
+            text,
+            return_token_type_ids=False,
+            return_tensors="pt",
+            truncation=True,
+            max_length=300,
+            padding="max_length",
+        )
 
-        return encoding
+        return {
+            "input_ids": encoding.input_ids,
+            "attention_mask": encoding.attention_mask,
+            "label": torch.tensor(label, dtype=torch.long),
+        }
+
+
+def collate_fn(batch: list[dict[str : torch.Tensor]]):
+    input_ids = [i["input_ids"] for i in batch]
+    attention_mask = [i["attention_mask"] for i in batch]
+    label = [i["label"] for i in batch]
+
+    input_ids = torch.concat(input_ids, dim=0)
+    attention_mask = torch.concat(attention_mask, dim=0)
+    label = torch.stack(label, dim=0)
+
+    return {"input_ids": input_ids, "attention_mask": attention_mask, "label": label}
 
 
 def get_tokenizer() -> transformers.AlbertTokenizerFast:

@@ -1,9 +1,8 @@
 import pytorch_lightning as pl
 import torch
 import torch.nn as nn
-import torchmetrics
 
-from src import models
+from src.models.utils import get_model
 
 
 class FakeNewsClassifier(pl.LightningModule):
@@ -15,24 +14,24 @@ class FakeNewsClassifier(pl.LightningModule):
         lr: int = 2e-5,
     ):
         super().__init__()
-        self.model = models.utils.get_model(model_type, num_labels=num_classes)
+        self.model = get_model(model_type, num_labels=num_classes)
         self.criterion = nn.CrossEntropyLoss()
-        self.training_metrics = nn.ModuleDict(
-            [
-                [
-                    "accuracy",
-                    torchmetrics.Accuracy(task="binary", num_classes=num_classes),
-                ]
-            ]
-        )
-        self.validation_metrics = nn.ModuleDict(
-            [
-                [
-                    "accuracy",
-                    torchmetrics.Accuracy(task="binary", num_classes=num_classes),
-                ]
-            ]
-        )
+        # self.training_metrics = nn.ModuleDict(
+        #     [
+        #         [
+        #             "accuracy",
+        #             torchmetrics.Accuracy(task="binary", num_classes=num_classes),
+        #         ]
+        #     ]
+        # )
+        # self.validation_metrics = nn.ModuleDict(
+        #     [
+        #         [
+        #             "accuracy",
+        #             torchmetrics.Accuracy(task="binary", num_classes=num_classes),
+        #         ]
+        #     ]
+        # )
         self.batch_size = batch_size
         self.lr = lr
 
@@ -44,25 +43,25 @@ class FakeNewsClassifier(pl.LightningModule):
     def training_step(self, batch: dict, batch_idx: int) -> torch.Tensor:
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
-        labels = batch["labels"]
-        logits = self.model(input_ids, attention_mask)
+        labels = batch["label"]
+        logits = self.model(input_ids, attention_mask).logits
         loss = self.criterion(logits, labels)
-        self.log(loss)
+        self.log("train_loss", loss)
 
         return loss
 
     def validation_step(self, batch: dict, batch_idx: int) -> torch.Tensor:
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
-        labels = batch["labels"]
-        logits = self.model(input_ids, attention_mask)
+        labels = batch["label"]
+        logits = self.model(input_ids, attention_mask).logits
         loss = self.criterion(logits, labels)
-        self.log(loss)
+        self.log("val_loss", loss)
 
     def test_step(self, batch: dict, batch_idx: int) -> torch.Tensor:
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
-        labels = batch["labels"]
+        labels = batch["label"]
         logits = self.model(input_ids, attention_mask)
         loss = self.criterion(logits, labels)
 
