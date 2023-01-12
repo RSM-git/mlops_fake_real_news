@@ -13,24 +13,24 @@ from torch.utils.data import Dataset
 
 
 @click.command()
-@click.argument("input_filepath", type=click.Path(exists=True))
-@click.argument("output_filepath", type=click.Path())
-def main(input_filepath, output_filepath):
+# @click.argument("input_filepath", type=click.Path(exists=True))
+# @click.argument("output_filepath", type=click.Path())
+def main():
     """Runs data processing scripts to turn raw data from (../raw) into
     cleaned data ready to be analyzed (saved in ../processed).
     """
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
 
-    # Check if zipped folder exists, before loading data files
-    zipped_filepath = input_filepath + "/zip_folder"
-    if os.path.isdir(zipped_filepath):
-        load_kaggle(input_filepath, zipped_filepath, output_filepath)
-    else:
-        print("Files already exist")
+    input_path = "data/raw/"
+    output_path = "data/processed/"
+
+    os.makedirs(os.path.join(input_path, "zip_folder"), exist_ok=True)
+    load_kaggle(input_path)
+    split(input_path, output_path)
 
 
-def load_kaggle(input_filepath, zipped_filepath, output_filepath):
+def load_kaggle(input_path: str):
     # Load environment variables
     project_dir = os.path.join(os.path.dirname(__file__), os.pardir)
     dotenv_path = os.path.join(project_dir, ".env")
@@ -42,6 +42,9 @@ def load_kaggle(input_filepath, zipped_filepath, output_filepath):
     except OSError as e:
         print("Kaggle API error:")
         print(e)
+        exit()
+        
+    zipped_filepath = input_path + "/zip_folder"
 
     # Download zipped data
     kaggle.api.dataset_download_file(
@@ -56,11 +59,15 @@ def load_kaggle(input_filepath, zipped_filepath, output_filepath):
     )
 
     # Unzip data
-    unzipped_folder_raw = input_filepath
+    unzipped_folder_raw = input_path
     with zipfile.ZipFile(os.path.join(zipped_filepath, "Fake.csv.zip"), "r") as zip_ref:
         zip_ref.extractall(unzipped_folder_raw)
     with zipfile.ZipFile(os.path.join(zipped_filepath, "True.csv.zip"), "r") as zip_ref:
         zip_ref.extractall(unzipped_folder_raw)
+
+
+def split(input_path: str, output_path: str):
+    pass
 
 
 def get_tokenizer() -> transformers.AlbertTokenizerFast:
