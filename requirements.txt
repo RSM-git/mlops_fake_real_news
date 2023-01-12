@@ -22,3 +22,4 @@ pytorch-lightning
 wandb
 kaggle
 pre-commit
+dvc[gs]
