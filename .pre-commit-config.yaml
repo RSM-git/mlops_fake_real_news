@@ -16,6 +16,8 @@ repos:
     rev:  5.11.4
     hooks:
     -   id: isort
+        args:
+          - "--profile=black"
 -   repo: https://github.com/PyCQA/flake8
     rev:  5e99de7209fc5278c73d242dfd27522a924ff8f6
     hooks:
@@ -23,4 +25,4 @@ repos:
         exclude: (^docs/|^tests/)
         args:
           - "--max-line-length=88"
-          - "--ignore=E203"
+          - "--extend-ignore=E203"

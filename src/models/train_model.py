@@ -7,7 +7,6 @@ from pytorch_lightning import Trainer, loggers
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
 from src.data.make_dataset import CreateData
-# from mlops_fake_real_news.src.models.model import FakeNewsClassifier
 from src.models.model import FakeNewsClassifier
 
 
@@ -24,22 +23,30 @@ def main(cfg):
     torch.manual_seed(seed)
 
     # Creates initial dataset files
-    CreateData()
+    creator = CreateData()
+    creator.create()
+    dl_train = creator.get_data_loader("train", batch_size=batch_size)
+    dl_val = creator.get_data_loader("val", batch_size=batch_size)
 
     model = FakeNewsClassifier(
-        model="albert-base-v2", num_classes=2, batch_size=batch_size, lr=lr
+        model_type="albert-base-v2", num_classes=2, batch_size=batch_size, lr=lr
     )
 
     trainer = Trainer(
-        model,
         callbacks=[
             ModelCheckpoint("models/", monitor="val_loss", filename="best_model"),
             EarlyStopping(monitor="val_loss", patience=2),
         ],
         logger=loggers.WandbLogger(project="mlops_fake_real_news", entity="crulotest"),
+        accelerator=accelerator,
+        max_epochs=3,  # TODO: add epochs as an hparam
     )
 
-    trainer.fit(model, accelerator=accelerator)
+    trainer.fit(
+        model,
+        train_dataloaders=dl_train,
+        val_dataloaders=dl_val,
+    )
 
 
 if __name__ == "__main__":

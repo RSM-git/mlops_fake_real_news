@@ -1,8 +1,5 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-.vscode
+# wandb
+wandb/
 
 # Data files
 *.csv
@@ -19,6 +16,12 @@ models/
 
 # Hydra output
 outputs/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+.vscode
 
 # C extensions
 *.so
