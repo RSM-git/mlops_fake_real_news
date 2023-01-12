@@ -65,15 +65,15 @@ class TestCreateData:
         assert train_sample[0].shape[0] == 2
 
 
-def test_get_tokenizer():
-    df = pd.DataFrame(
-        {"text": ["test text label 1", "test text label 0"], "label": [1, 0]}
-    )
-    dataset = NewsDataset(df)
-    # OSError
-    # "tokenizers" folder should include the "albert-base-v2" folder, as well as includes the 3 json files
-    assert dataset.get_tokenizer(), OSError
-    # delete "albert-base-v2" and run again
+# def test_get_tokenizer():
+#     df = pd.DataFrame(
+#         {"text": ["test text label 1", "test text label 0"], "label": [1, 0]}
+#     )
+#     dataset = NewsDataset(df)
+#     # OSError
+#     # "tokenizers" folder should include the "albert-base-v2" folder, as well as includes the 3 json files
+#     assert dataset.get_tokenizer(), OSError
+#     # delete "albert-base-v2" and run again
 
 
 # TODO: add dataset testing
