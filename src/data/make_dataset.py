@@ -26,16 +26,8 @@ class CreateData:
         self.input_path = "data/raw/"
         self.output_path = "data/processed/"
 
-        os.makedirs(os.path.join(self.input_path, "zip_folder"), exist_ok=True)
-        self.load_kaggle()
-        self.merge_csv()
-        self.split()
-
     def load_kaggle(self):
-        # Load environment variables
-        project_dir = os.path.join(os.path.dirname(__file__), os.pardir)
-        dotenv_path = os.path.join(project_dir, ".env")
-        load_dotenv(dotenv_path)
+        load_dotenv(".env")
 
         # Check that kaggle API authentication works
         try:
@@ -45,44 +37,42 @@ class CreateData:
             print(e)
             exit()
 
-        zipped_filepath = self.input_path + "zip_folder"
-
         # Download zipped data
         kaggle.api.dataset_download_file(
             "clmentbisaillon/fake-and-real-news-dataset",
             "Fake.csv",
-            path=zipped_filepath,
+            path=self.input_path,
         )
         kaggle.api.dataset_download_file(
             "clmentbisaillon/fake-and-real-news-dataset",
             "True.csv",
-            path=zipped_filepath,
+            path=self.input_path,
         )
 
         # Unzip data
-        unzipped_folder_raw = self.input_path
         with zipfile.ZipFile(
-            os.path.join(zipped_filepath, "Fake.csv.zip"), "r"
+            os.path.join(self.input_path, "Fake.csv.zip"), "r"
         ) as zip_ref:
-            zip_ref.extractall(unzipped_folder_raw)
+            zip_ref.extractall(self.input_path)
         with zipfile.ZipFile(
-            os.path.join(zipped_filepath, "True.csv.zip"), "r"
+            os.path.join(self.input_path, "True.csv.zip"), "r"
         ) as zip_ref:
-            zip_ref.extractall(unzipped_folder_raw)
+            zip_ref.extractall(self.input_path)
+        os.remove(self.input_path + "Fake.csv.zip")
+        os.remove(self.input_path + "True.csv.zip")
 
     def merge_csv(self):
-        a = pd.read_csv(self.input_path + "Fake.csv")  # Load csv
-        b = pd.read_csv(self.input_path + "True.csv")
+        fake = pd.read_csv(self.input_path + "Fake.csv")  # Load csv
+        true = pd.read_csv(self.input_path + "True.csv")
 
         # Add label column
-        a["label"] = 0
-        b["label"] = 1
+        fake["label"] = 0
+        true["label"] = 1
 
         # Merge
-        merged = a.merge(b, how="outer")
+        merged = fake.merge(true, how="outer")
         merged = merged.sample(frac=1).reset_index(drop=True)
         path = Path(self.output_path + "merge.csv")
-        print(path)
         merged.to_csv(path)
 
     def split(self):
@@ -90,19 +80,39 @@ class CreateData:
         data = pd.read_csv(self.output_path + "merge.csv", index_col=0)
 
         # split data into train, split, val, test
-        # split is split up into val and test
-        y = data.label
-        X = data.drop("label", axis=1)
-        X_train, X_split, y_train, y_split = train_test_split(X, y, test_size=0.2)
-        X_val, X_test, y_val, y_test = train_test_split(X_split, y_split, test_size=0.5)
+        df_train, df_test = train_test_split(data, test_size=0.2)
+        df_val, df_test = train_test_split(df_test, test_size=0.5)
 
-        X_train["label"] = y_train.values
-        X_val["label"] = y_val.values
-        X_test["label"] = y_test.values
+        df_train.to_csv(self.output_path + "train.csv")
+        df_val.to_csv(self.output_path + "val.csv")
+        df_test.to_csv(self.output_path + "test.csv")
 
-        X_train.to_csv(self.output_path + "train.csv")
-        X_val.to_csv(self.output_path + "validation.csv")
-        X_test.to_csv(self.output_path + "test.csv")
+    def create(self):
+        if (
+            os.path.exists(self.output_path + "train.csv")
+            and os.path.exists(self.output_path + "val.csv")
+            and os.path.exists(self.output_path + "test.csv")
+        ):
+            pass
+        else:
+            self.load_kaggle()
+            self.merge_csv()
+            self.split()
+
+    def get_data_loader(self, split: str, **kwargs) -> torch.utils.data.DataLoader:
+        if "train":
+            df = pd.read_csv(self.output_path + "train.csv")
+        elif "validation":
+            df = pd.read_csv(self.output_path + "val.csv")
+        elif "test":
+            df = pd.read_csv(self.output_path + "test.csv")
+        else:
+            raise "Possible splits: 'train' , 'val' , 'test'"
+
+        ds = NewsDataset(df)
+        dl = torch.utils.data.Dataloader(ds, **kwargs)
+
+        return dl
 
 
 class NewsDataset(Dataset):
@@ -124,30 +134,18 @@ class NewsDataset(Dataset):
 
         return encoding
 
-    def get_df(self, type: str):
-        dir = "data/processed"
-        if "train":
-            df = pd.read_csv(dir + "train.csv")
-        elif "validation":
-            df = pd.read_csv(dir + "validation.csv")
-        elif "test":
-            df = pd.read_csv(dir + "test.csv")
-        else:
-            raise "Possible types: 'train' , 'validation' , 'test' "
 
-        return df
+def get_tokenizer() -> transformers.AlbertTokenizerFast:
+    path_tokenizers = "tokenizers"
+    tokenizer_type = "albert-base-v2"
+    path_tokenizer = os.path.join(path_tokenizers, tokenizer_type)
+    if not os.path.exists(path_tokenizer):
+        tokenizer = transformers.AutoTokenizer.from_pretrained(tokenizer_type)
+        tokenizer.save_pretrained(path_tokenizer)
+    else:
+        tokenizer = transformers.AutoTokenizer.from_pretrained(path_tokenizer)
 
-    def get_tokenizer(self) -> transformers.AlbertTokenizerFast:
-        path_tokenizers = "tokenizers"
-        tokenizer_type = "albert-base-v2"
-        path_tokenizer = os.path.join(path_tokenizers, tokenizer_type)
-        if not os.path.exists(path_tokenizer):
-            tokenizer = transformers.AutoTokenizer.from_pretrained(tokenizer_type)
-            tokenizer.save_pretrained(path_tokenizer)
-        else:
-            tokenizer = transformers.AutoTokenizer.from_pretrained(path_tokenizer)
-
-        return tokenizer
+    return tokenizer
 
 
 if __name__ == "__main__":
@@ -161,4 +159,5 @@ if __name__ == "__main__":
     # load up the .env entries as environment variables
     load_dotenv(find_dotenv())
 
-    Creation = CreateData()
+    creator = CreateData()
+    creator.create()
