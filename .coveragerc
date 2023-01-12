@@ -1,0 +1,4 @@
+[run]
+include = */src/*
+disable_warnings = include-ignored
+
