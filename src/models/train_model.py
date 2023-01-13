@@ -17,6 +17,7 @@ def main(cfg):
     batch_size = cfg.hyperparameters.batch_size
     lr = cfg.hyperparameters.learning_rate
     seed = cfg.hyperparameters.seed
+    epochs = cfg.hyperparameters.epochs
     accelerator = cfg.hyperparameters.accelerator
 
     random.seed(seed)
@@ -39,7 +40,7 @@ def main(cfg):
         ],
         logger=loggers.WandbLogger(project="mlops_fake_real_news", entity="crulotest"),
         accelerator=accelerator,
-        max_epochs=3,  # TODO: add epochs as an hparam
+        max_epochs=epochs,
     )
 
     trainer.fit(
