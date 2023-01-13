@@ -20,7 +20,6 @@ COPY models/ models/
 COPY reports/ reports/
 
 # should these be included?
-COPY tests/ tests/
 COPY tokenizers/ tokenizers/
 
 # entrypoint
