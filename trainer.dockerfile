@@ -19,8 +19,5 @@ COPY data/ data/
 COPY models/ models/
 COPY reports/ reports/
 
-# should these be included?
-COPY tokenizers/ tokenizers/
-
 # entrypoint
-ENTRYPOINT ["python3", "-u", "src/models/train_model.py"]
+ENTRYPOINT ["python3", "-u", "src/models/train_model.py", "--hydra.job.chdir=False"]
