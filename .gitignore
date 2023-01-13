@@ -5,6 +5,9 @@ wandb/
 *.csv
 *.zip
 
+!*.csv.dvc
+!data/raw/True.csv.dvc
+
 # Tokenizers
 tokenizers/
 
