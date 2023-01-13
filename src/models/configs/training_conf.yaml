@@ -1,6 +1,6 @@
 hyperparameters:
   batch_size: 32
   learning_rate: 2e-5
-  epochs: 30
+  epochs: 3
   seed: 123
   accelerator: 'cuda'
