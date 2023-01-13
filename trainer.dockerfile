@@ -18,6 +18,7 @@ COPY src/ src/
 COPY data/ data/
 COPY models/ models/
 COPY reports/ reports/
+COPY .env .env
 
 # entrypoint
-ENTRYPOINT ["python3", "-u", "src/models/train_model.py", "--hydra.job.chdir=False"]
+ENTRYPOINT ["python3", "-u", "src/models/train_model.py", "hydra.job.chdir=False"]

@@ -1,3 +1,4 @@
+import os
 import random
 
 import hydra
@@ -6,13 +7,15 @@ from dotenv import load_dotenv
 from pytorch_lightning import Trainer, loggers
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
+import wandb
 from src.data.make_dataset import CreateData
 from src.models.model import FakeNewsClassifier
 
 
 @hydra.main(config_name="training_conf.yaml", config_path="configs")
 def main(cfg):
-    load_dotenv()
+    load_dotenv(".env")
+    wandb.login(key=os.environ["WANDB_API_KEY"])
 
     batch_size = cfg.hyperparameters.batch_size
     lr = cfg.hyperparameters.learning_rate
@@ -41,8 +44,9 @@ def main(cfg):
         logger=loggers.WandbLogger(project="mlops_fake_real_news", entity="crulotest"),
         accelerator=accelerator,
         max_epochs=epochs,
+        # limit_train_batches=2,
+        # limit_val_batches=2,
     )
-
     trainer.fit(
         model,
         train_dataloaders=dl_train,
