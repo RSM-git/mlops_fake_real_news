@@ -2,6 +2,7 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 
+from src.data.make_dataset import get_tokenizer
 from src.models.utils import get_model
 
 
@@ -39,6 +40,24 @@ class FakeNewsClassifier(pl.LightningModule):
         self, input_ids: torch.Tensor, attention_mask: torch.Tensor
     ) -> torch.Tensor:
         return self.model(input_ids=input_ids, attention_mask=attention_mask).logits
+
+    def predict_from_str(self, text: str) -> str:
+        tokenizer = get_tokenizer()
+        encoding = tokenizer(
+            text,
+            return_token_type_ids=False,
+            return_tensors="pt",
+            truncation=True,
+            max_length=300,
+            padding="max_length",
+        )
+        input_ids = encoding["input_ids"]
+        attention_mask = encoding["attention_mask"]
+
+        logits = self.model(input_ids, attention_mask).logits
+        out = torch.argmax(logits)
+
+        return "True" if out else "Fake"
 
     def training_step(self, batch: dict, batch_idx: int) -> torch.Tensor:
         input_ids = batch["input_ids"]
