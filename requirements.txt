@@ -25,3 +25,5 @@ pre-commit
 wandb
 dvc[gs]
 scikit-learn
+fastapi
+uvicorn

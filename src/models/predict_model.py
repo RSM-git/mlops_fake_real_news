@@ -1,12 +1,35 @@
 import os
 
+from dotenv import load_dotenv
+from fastapi import FastAPI
+from google.cloud import storage
+
 from src.models.model import FakeNewsClassifier
 
-model = FakeNewsClassifier.load_from_checkpoint(os.getcwd() + "/models/best_model.ckpt")
+load_dotenv(".env")
 
-# disable randomness, dropout, etc...
+app = FastAPI()
+
+bucket_name = "model-bucket-test123"
+blob_name = "best_model.ckpt"
+
+storage_client = storage.Client(project="corded-pivot-374409")
+bucket = storage_client.bucket(bucket_name)
+blob = bucket.blob(blob_name)
+
+file_name = "src/models/" + blob_name
+blob.download_to_filename(file_name)
+
+model = FakeNewsClassifier.load_from_checkpoint(os.getcwd() + file_name)
 model.eval()
 
-# predict with the model
-y_hat = model.predict_from_str("Trump on Twitter (Dec 28) - Global Warming")
-print(y_hat)
+
+@app.get("/")
+def root():
+    return {"Hello": "World"}
+
+
+@app.get("/predict/{text}")
+def predict(text: str):
+    prediction = model.predict_from_str(text)
+    return {"prediction": prediction}
