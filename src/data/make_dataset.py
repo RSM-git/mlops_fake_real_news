@@ -11,6 +11,12 @@ from dotenv import find_dotenv, load_dotenv
 from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset
 
+try:
+    import kaggle
+except ModuleNotFoundError as e:
+    logging.warning("Kaggle not found. Please install kaggle to download data.")
+    raise e
+
 
 # @click.command()
 # @click.argument("input_filepath", type=click.Path(exists=True))
@@ -27,16 +33,6 @@ class CreateData:
         self.output_path = "data/processed/"
 
     def load_kaggle(self):
-        load_dotenv(".env")
-
-        # Check that kaggle API authentication works
-        try:
-            import kaggle
-        except OSError as e:
-            print("Kaggle API error:")
-            print(e)
-            exit()
-
         # Download zipped data
         kaggle.api.dataset_download_file(
             "clmentbisaillon/fake-and-real-news-dataset",
@@ -51,11 +47,11 @@ class CreateData:
 
         # Unzip data
         with zipfile.ZipFile(
-            os.path.join(self.input_path, "Fake.csv.zip"), "r"
+                os.path.join(self.input_path, "Fake.csv.zip"), "r"
         ) as zip_ref:
             zip_ref.extractall(self.input_path)
         with zipfile.ZipFile(
-            os.path.join(self.input_path, "True.csv.zip"), "r"
+                os.path.join(self.input_path, "True.csv.zip"), "r"
         ) as zip_ref:
             zip_ref.extractall(self.input_path)
         os.remove(self.input_path + "Fake.csv.zip")
@@ -89,9 +85,9 @@ class CreateData:
 
     def create(self):
         if (
-            os.path.exists(self.output_path + "train.csv")
-            and os.path.exists(self.output_path + "val.csv")
-            and os.path.exists(self.output_path + "test.csv")
+                os.path.exists(self.output_path + "train.csv")
+                and os.path.exists(self.output_path + "val.csv")
+                and os.path.exists(self.output_path + "test.csv")
         ):
             pass
         else:
@@ -124,7 +120,7 @@ class NewsDataset(Dataset):
     def __len__(self):
         return len(self.df)
 
-    def __getitem__(self, index: int) -> dict[str : torch.Tensor]:
+    def __getitem__(self, index: int) -> dict[str: torch.Tensor]:
         # load row
         row = self.df.iloc[0]
         text = row["text"]
@@ -145,7 +141,7 @@ class NewsDataset(Dataset):
         }
 
 
-def collate_fn(batch: list[dict[str : torch.Tensor]]):
+def collate_fn(batch: list[dict[str: torch.Tensor]]):
     input_ids = [i["input_ids"] for i in batch]
     attention_mask = [i["attention_mask"] for i in batch]
     label = [i["label"] for i in batch]
