@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 import torch
+import kaggle
 import transformers
 
 from src.data.make_dataset import CreateData, NewsDataset
