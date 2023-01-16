@@ -31,6 +31,7 @@ def remove_data_files():
 remove_data_files()
 
 
+@pytest.mark.skipif(os.environ.get("KAGGLE_KEY") is None, reason="Kaggle key not found")
 class TestCreateData:
     creator = CreateData()
 
