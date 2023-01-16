@@ -1,0 +1,16 @@
+epochs:
+  value: 2
+batch_size:
+  value: 32
+learning_rate:
+  value: 0.000002
+device:
+  value: gpu
+seed:
+  value: 1
+num_workers:
+  value: 4
+limit_train_batches:
+  value: 10
+limit_val_batches:
+  value: 10

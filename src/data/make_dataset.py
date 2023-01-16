@@ -100,11 +100,11 @@ class CreateData:
             self.split()
 
     def get_data_loader(self, split: str, **kwargs) -> torch.utils.data.DataLoader:
-        if "train":
+        if split == "train":
             df = pd.read_csv(self.output_path + "train.csv")
-        elif "validation":
+        elif split == "val":
             df = pd.read_csv(self.output_path + "val.csv")
-        elif "test":
+        elif split == "test":
             df = pd.read_csv(self.output_path + "test.csv")
         else:
             raise "Possible splits: 'train' , 'val' , 'test'"
@@ -116,25 +116,26 @@ class CreateData:
 
 
 class NewsDataset(Dataset):
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df: pd.DataFrame, max_length: int = 80):
         super().__init__()
         self.df = df
         self.tokenizer = get_tokenizer()  # transformers
+        self.max_length = max_length
 
     def __len__(self):
         return len(self.df)
 
     def __getitem__(self, index: int) -> dict[str : torch.Tensor]:
         # load row
-        row = self.df.iloc[0]
-        text = row["text"]
+        row = self.df.iloc[index]
+        text = row["title"]
         label = row["label"]
         encoding = self.tokenizer(
             text,
             return_token_type_ids=False,
             return_tensors="pt",
             truncation=True,
-            max_length=300,
+            max_length=self.max_length,
             padding="max_length",
         )
 
