@@ -134,7 +134,7 @@ class NewsDataset(Dataset):
             return_token_type_ids=False,
             return_tensors="pt",
             truncation=True,
-            max_length=200,
+            max_length=300,
             padding="max_length",
         )
 

@@ -17,7 +17,6 @@ transformers
 pandas
 torch
 pytest
-pytest-order
 hydra-core
 pytorch-lightning
 wandb
