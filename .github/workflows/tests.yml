@@ -25,12 +25,12 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements_tests.txt
       - name: Test with pytest
-        env:
-          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
         run: |
           pip install pytest coverage
           pytest -v
           coverage run -m pytest tests/
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v2
