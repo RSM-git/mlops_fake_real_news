@@ -35,32 +35,28 @@ class TestCreateData:
     creator = CreateData()
 
     # TODO: need to add kaggle api key secret
-    # def test_load_kaggle(self):
-    #     # get and unzip zip files
-    #     self.creator.load_kaggle()
 
-    #     assert os.path.exists("data/raw/Fake.csv")
-    #     assert os.path.exists("data/raw/True.csv")
+    @pytest.mark.order(1)
+    def test_load_kaggle(self):
+        # get and unzip zip files
+        self.creator.load_kaggle()
 
-    @pytest.mark.skipif(
-        not os.path.exists("data/raw/train.csv"), reason="data not found"
-    )
+        assert os.path.exists("data/raw/Fake.csv")
+        assert os.path.exists("data/raw/True.csv")
+
+    @pytest.mark.order(2)
     def test_merge_csv(self):
         self.creator.merge_csv()
         assert os.path.exists("data/processed/merge.csv")
 
-    @pytest.mark.skipif(
-        not os.path.exists("data/processed/merge.csv"), reason="data not found"
-    )
+    @pytest.mark.order(3)
     def test_split(self):
         self.creator.split()
         assert os.path.exists("data/processed/train.csv")
         assert os.path.exists("data/processed/val.csv")
         assert os.path.exists("data/processed/test.csv")
 
-    @pytest.mark.skipif(
-        not os.path.exists("data/processed/train.csv"), reason="data not found"
-    )
+    @pytest.mark.order(4)
     def test_get_dataloader(self):
         dl_train = self.creator.get_data_loader("train", batch_size=2)
         dl_val = self.creator.get_data_loader("val", num_workers=2)
@@ -68,8 +64,12 @@ class TestCreateData:
 
         assert isinstance(dl_train, torch.utils.data.DataLoader)
         train_sample = next(iter(dl_train))
-        assert train_sample[0].shape[0] == 2
-
+        assert "input_ids" in train_sample, "Batch missing input ids"
+        assert "attention_mask" in train_sample, "Batch missing attention mask"
+        assert "label" in train_sample, "Batch should contain labels"
+        assert train_sample["input_ids"].shape == (2, 300)
+        assert train_sample["attention_mask"].shape == (2, 300)
+        assert train_sample["label"].shape == (2,)
 
 # def test_get_tokenizer():
 #     df = pd.DataFrame(
