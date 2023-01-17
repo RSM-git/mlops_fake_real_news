@@ -163,7 +163,7 @@ We agreed to use a Python 3.9 virtual environment. We would then pip install the
 > *experiments.*
 > Answer:
 
-From the cookiecutter template we added precommit to the docs directory
+We did utilize the Cookiecutter template. From /src/data/ we created the raw and processed datasets, and put them in the /data/ folder. The model checkpoints were saved in the /models/ folder. The model specification-, training- , and prediction- files were located in the /src/models/ folder. Most code from here is added to the root folder, or added in new folders, also in the root.
 
 ### Question 6
 
@@ -241,7 +241,7 @@ Every time we started working on a new feature in the project we created a new b
 >
 > Answer:
 
---- question 10 fill here ---
+We did try, but we were unable to pull data properly.
 
 ### Question 11
 
@@ -257,7 +257,7 @@ Every time we started working on a new feature in the project we created a new b
 >
 > Answer:
 
---- question 11 fill here ---
+We used unittests, accompanied by Codecov...
 
 ## Running code and tracking experiments
 
