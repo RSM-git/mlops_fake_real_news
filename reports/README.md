@@ -148,7 +148,7 @@ We chose to work with the huggingface transformers framework to perform the natu
 >
 > Answer:
 
-We agreed to use a Python 3.9 virtual environment. We'd then pip install the packages defined in the 'requirements.txt' file. If a new package is required, we'd push the updated requirements file, and prompt people to install the new packages.
+We agreed to use a Python 3.9 virtual environment. We would then pip install the packages defined in the 'requirements.txt' file. If a new package is required, we would push the updated requirements file, and prompt people to install the new packages, such that the environment was up-to-date with the project.
 
 ### Question 5
 
@@ -163,7 +163,7 @@ We agreed to use a Python 3.9 virtual environment. We'd then pip install the pac
 > *experiments.*
 > Answer:
 
---- question 5 fill here ---
+From the cookiecutter template we added precommit to the docs directory
 
 ### Question 6
 

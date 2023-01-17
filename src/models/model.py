@@ -34,6 +34,7 @@ class FakeNewsClassifier(pl.LightningModule):
             ]
         )
         self.lr = lr
+        self.max_length = 80
 
     def forward(
         self, input_ids: torch.Tensor, attention_mask: torch.Tensor
@@ -47,7 +48,7 @@ class FakeNewsClassifier(pl.LightningModule):
             return_token_type_ids=False,
             return_tensors="pt",
             truncation=True,
-            max_length=300,
+            max_length=self.max_length,
             padding="max_length",
         )
         input_ids = encoding["input_ids"]
