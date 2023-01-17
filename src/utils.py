@@ -4,7 +4,16 @@ from google.oauth2 import service_account
 from yaml.loader import SafeLoader
 
 
-def load_yaml(file_path: str):
+def load_yaml(file_path: str) -> dict:
+    """safely loads a yaml file and returns
+    it as a dict
+
+    Args:
+        file_path (str): path to the yaml file with extension
+
+    Returns:
+        dict: key-value pairs of the yaml
+    """
     with open(file_path, "r") as f:
         data = yaml.load(f, Loader=SafeLoader)
     return data
@@ -12,6 +21,7 @@ def load_yaml(file_path: str):
 
 def download_blob(bucket_name, source_blob_name, destination_file_name):
     """Downloads a blob from the bucket."""
+    # code taken from gcloud official documentation
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
 
@@ -45,6 +55,7 @@ def download_blob(bucket_name, source_blob_name, destination_file_name):
 
 def upload_blob(bucket_name, source_file_name, destination_blob_name):
     """Uploads a file to the bucket."""
+    # code taken from gcloud official documentation
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
     # The path to your file to upload
