@@ -12,7 +12,6 @@ class FakeNewsClassifier(pl.LightningModule):
         self,
         model_type: str = "albert-base-v2",
         num_classes: int = 2,
-        batch_size: int = 32,
         lr: int = 2e-5,
     ):
         super().__init__()
@@ -34,7 +33,6 @@ class FakeNewsClassifier(pl.LightningModule):
                 ]
             ]
         )
-        self.batch_size = batch_size
         self.lr = lr
 
     def forward(
