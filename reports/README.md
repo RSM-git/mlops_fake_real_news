@@ -129,7 +129,7 @@ s204119, s204112, s204135, s204141
 >
 > Answer:
 
-We chose to work with the huggingface transformers framework to perform the natural language processing task of classifying fake or real news articles, based on their titles. From huggingface we use a transformer model, specifically ALBERT, alongside its corresponding tokenizer. The tokenizer encodes the piece of text, we wish to use for our classification task, such that the transformer model can comprehend it. 
+We chose to work with the huggingface transformers framework to perform the natural language processing task of classifying fake or real news articles, based on their titles. From huggingface we use a transformer model, specifically ALBERT, alongside its corresponding tokenizer. The tokenizer encodes the piece of text, we wish to use for our classification task, such that the transformer model can comprehend it.
 
 ## Coding environment
 
@@ -148,7 +148,7 @@ We chose to work with the huggingface transformers framework to perform the natu
 >
 > Answer:
 
---- question 4 fill here ---
+We agreed to use a Python 3.9 virtual environment. We'd then pip install the packages defined in the 'requirements.txt' file. If a new package is required, we'd push the updated requirements file, and prompt people to install the new packages.
 
 ### Question 5
 
@@ -174,7 +174,10 @@ We chose to work with the huggingface transformers framework to perform the natu
 >
 > Answer:
 
---- question 6 fill here ---
+We used Black Formatter which let us write a lot of code with out thinking much about the pretty setup.
+We used isort which sorts the imports, both in alphabetical order and seperate them by type.
+We used Flake8
+It is important to have a guideline when programming. In larger projects code can be confussing if written with different formatting or if the quality of code is changing all the time. In our project the code quality varies, and therefore we help the ones lacking by rewriting what the meant by the code after they made it.
 
 ## Version control
 
@@ -193,7 +196,7 @@ We chose to work with the huggingface transformers framework to perform the natu
 >
 > Answer:
 
---- question 7 fill here ---
+We implemented multiple tests, which focused on different acpects of the code. Primarily we did unittests on the dataset, because there was alot fiddeling around with it.
 
 ### Question 8
 
@@ -208,7 +211,7 @@ We chose to work with the huggingface transformers framework to perform the natu
 >
 > Answer:
 
---- question 8 fill here ---
+We have a code coverage of 35%, which includes the source code.
 
 ### Question 9
 
@@ -223,7 +226,7 @@ We chose to work with the huggingface transformers framework to perform the natu
 >
 > Answer:
 
---- question 9 fill here ---
+Every time we started working on a new feature in the project we created a new branch. After we had implementet that thing and merged we deleted the branch, and created a new one when we started on a new task. We implemented that every pull request should be verified by another member of the group, in that way one person should not be able to mess things up, example like uploading all the data, or deleting main things. Before the pull request even got to Github we checked the code with pre-commit test. Testing the the code could run.
 
 ### Question 10
 
@@ -273,7 +276,7 @@ We chose to work with the huggingface transformers framework to perform the natu
 >
 > Answer:
 
---- question 12 fill here ---
+We used config files, and could run the code with "make train" exampele.
 
 ### Question 13
 
@@ -335,7 +338,7 @@ We chose to work with the huggingface transformers framework to perform the natu
 >
 > Answer:
 
---- question 16 fill here ---
+We used the debugger, one in the group had problems with the debugger not working and used print states and old ways of debugging.
 
 ## Working in the cloud
 

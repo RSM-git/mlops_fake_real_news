@@ -33,7 +33,7 @@ data:
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py
 
 train:
-	$(PYTHON_INTERPRETER) src/models/train_model.py hydra.job.chdir=False
+	$(PYTHON_INTERPRETER) src/models/train_model.py
 
 ## Delete all compiled Python files
 clean:

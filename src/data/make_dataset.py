@@ -1,6 +1,5 @@
 import logging
 import os
-import zipfile
 from pathlib import Path
 
 # import click
@@ -11,10 +10,9 @@ from dotenv import find_dotenv, load_dotenv
 from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset
 
+from src.utils import download_blob
 
-# @click.command()
-# @click.argument("input_filepath", type=click.Path(exists=True))
-# @click.argument("output_filepath", type=click.Path())
+
 class CreateData:
     def __init__(self):
         """Runs data processing scripts to turn raw data from (../raw) into
@@ -26,40 +24,9 @@ class CreateData:
         self.input_path = "data/raw/"
         self.output_path = "data/processed/"
 
-    def load_kaggle(self):
-        load_dotenv(".env")
-
-        # Check that kaggle API authentication works
-        try:
-            import kaggle
-        except OSError as e:
-            print("Kaggle API error:")
-            print(e)
-            exit()
-
-        # Download zipped data
-        kaggle.api.dataset_download_file(
-            "clmentbisaillon/fake-and-real-news-dataset",
-            "Fake.csv",
-            path=self.input_path,
-        )
-        kaggle.api.dataset_download_file(
-            "clmentbisaillon/fake-and-real-news-dataset",
-            "True.csv",
-            path=self.input_path,
-        )
-
-        # Unzip data
-        with zipfile.ZipFile(
-            os.path.join(self.input_path, "Fake.csv.zip"), "r"
-        ) as zip_ref:
-            zip_ref.extractall(self.input_path)
-        with zipfile.ZipFile(
-            os.path.join(self.input_path, "True.csv.zip"), "r"
-        ) as zip_ref:
-            zip_ref.extractall(self.input_path)
-        os.remove(self.input_path + "Fake.csv.zip")
-        os.remove(self.input_path + "True.csv.zip")
+    def download_data(self):
+        download_blob("fake_real_news_bucket", "Fake.csv", "data/raw/Fake.csv")
+        download_blob("fake_real_news_bucket", "True.csv", "data/raw/True.csv")
 
     def merge_csv(self):
         fake = pd.read_csv(self.input_path + "Fake.csv")  # Load csv
@@ -95,16 +62,16 @@ class CreateData:
         ):
             pass
         else:
-            self.load_kaggle()
+            self.download_data()
             self.merge_csv()
             self.split()
 
     def get_data_loader(self, split: str, **kwargs) -> torch.utils.data.DataLoader:
-        if "train":
+        if split == "train":
             df = pd.read_csv(self.output_path + "train.csv")
-        elif "validation":
+        elif split == "val":
             df = pd.read_csv(self.output_path + "val.csv")
-        elif "test":
+        elif split == "test":
             df = pd.read_csv(self.output_path + "test.csv")
         else:
             raise "Possible splits: 'train' , 'val' , 'test'"
@@ -116,25 +83,26 @@ class CreateData:
 
 
 class NewsDataset(Dataset):
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df: pd.DataFrame, max_length: int = 80):
         super().__init__()
         self.df = df
         self.tokenizer = get_tokenizer()  # transformers
+        self.max_length = max_length
 
     def __len__(self):
         return len(self.df)
 
     def __getitem__(self, index: int) -> dict[str : torch.Tensor]:
         # load row
-        row = self.df.iloc[0]
-        text = row["text"]
+        row = self.df.iloc[index]
+        text = row["title"]
         label = row["label"]
         encoding = self.tokenizer(
             text,
             return_token_type_ids=False,
             return_tensors="pt",
             truncation=True,
-            max_length=300,
+            max_length=self.max_length,
             padding="max_length",
         )
 

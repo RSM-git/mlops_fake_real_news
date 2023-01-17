@@ -11,14 +11,14 @@ COPY requirements.txt requirements.txt
 
 # install requirements
 WORKDIR /
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt --no-cache-dir
 
 # copy relevant folders
+COPY configs/ configs/
 COPY src/ src/
 COPY data/ data/
 COPY models/ models/
-COPY reports/ reports/
-COPY .env .env
 
 # entrypoint
-ENTRYPOINT ["python3", "-u", "src/models/train_model.py", "hydra.job.chdir=False"]
+ENTRYPOINT ["python3", "-u", "src/models/train_model.py"]

@@ -1,6 +1,7 @@
 import pytorch_lightning as pl
 import torch
 import torch.nn as nn
+import torchmetrics
 
 from src.data.make_dataset import get_tokenizer
 from src.models.utils import get_model
@@ -11,29 +12,27 @@ class FakeNewsClassifier(pl.LightningModule):
         self,
         model_type: str = "albert-base-v2",
         num_classes: int = 2,
-        batch_size: int = 32,
         lr: int = 2e-5,
     ):
         super().__init__()
         self.model = get_model(model_type, num_labels=num_classes)
         self.criterion = nn.CrossEntropyLoss()
-        # self.training_metrics = nn.ModuleDict(
-        #     [
-        #         [
-        #             "accuracy",
-        #             torchmetrics.Accuracy(task="binary", num_classes=num_classes),
-        #         ]
-        #     ]
-        # )
-        # self.validation_metrics = nn.ModuleDict(
-        #     [
-        #         [
-        #             "accuracy",
-        #             torchmetrics.Accuracy(task="binary", num_classes=num_classes),
-        #         ]
-        #     ]
-        # )
-        self.batch_size = batch_size
+        self.training_metrics = nn.ModuleDict(
+            [
+                [
+                    "accuracy",
+                    torchmetrics.Accuracy(task="binary", num_classes=num_classes),
+                ]
+            ]
+        )
+        self.validation_metrics = nn.ModuleDict(
+            [
+                [
+                    "accuracy",
+                    torchmetrics.Accuracy(task="binary", num_classes=num_classes),
+                ]
+            ]
+        )
         self.lr = lr
 
     def forward(
@@ -65,7 +64,15 @@ class FakeNewsClassifier(pl.LightningModule):
         labels = batch["label"]
         logits = self.model(input_ids, attention_mask).logits
         loss = self.criterion(logits, labels)
+        predictions = logits.argmax(dim=1)
+        self.training_metrics["accuracy"](predictions, labels)
         self.log("train_loss", loss)
+        self.log(
+            "train_accuracy",
+            self.training_metrics["accuracy"],
+            on_epoch=False,
+            on_step=True,
+        )
 
         return loss
 
@@ -75,7 +82,15 @@ class FakeNewsClassifier(pl.LightningModule):
         labels = batch["label"]
         logits = self.model(input_ids, attention_mask).logits
         loss = self.criterion(logits, labels)
+        predictions = logits.argmax(dim=1)
+        self.validation_metrics["accuracy"](predictions, labels)
         self.log("val_loss", loss)
+        self.log(
+            "val_accuracy",
+            self.validation_metrics["accuracy"],
+            on_epoch=True,
+            on_step=True,
+        )
 
     def test_step(self, batch: dict, batch_idx: int) -> torch.Tensor:
         input_ids = batch["input_ids"]
