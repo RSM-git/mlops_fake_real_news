@@ -35,6 +35,8 @@ data:
 train:
 	$(PYTHON_INTERPRETER) src/models/train_model.py
 
+train_gpu:
+	$(PYTHON_INTERPRETER) src/models/train_model.py --config_file train_gpu.yaml
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete

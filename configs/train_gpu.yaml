@@ -1,0 +1,13 @@
+trainer:
+  max_epochs: 1
+  accelerator: gpu
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+
+dl:
+  batch_size: 36
+  num_workers: 8
+
+seed: 1
+
+lr: 0.000002
