@@ -20,7 +20,5 @@ COPY src/ src/
 COPY data/ data/
 COPY models/ models/
 
-RUN dvc pull
-
 # entrypoint
 ENTRYPOINT ["python3", "-u", "src/models/train_model.py"]
