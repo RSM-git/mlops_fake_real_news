@@ -17,8 +17,6 @@ RUN pip install -r requirements.txt --no-cache-dir
 COPY src/ src/
 COPY data/ data/
 COPY models/ models/
-COPY reports/ reports/
-COPY .env .env
 
 # entrypoint
 ENTRYPOINT ["python3", "-u", "src/models/train_model.py"]
