@@ -1,0 +1,6 @@
+[core]
+    remote = gcloud
+['remote "bucket"']
+    url = gs://fake_real_news_bucket
+['remote "gcloud"']
+    url = gs://fake_real_news_bucket/
