@@ -1,0 +1,13 @@
+trainer:
+  max_epochs: 2
+  accelerator: cpu
+  limit_train_batches: 10
+  limit_val_batches: 10
+
+dl:
+  batch_size: 16
+  num_workers: 1
+
+seed: 1
+
+lr: 0.000002
