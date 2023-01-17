@@ -1,6 +1,5 @@
 import logging
 import os
-import zipfile
 from pathlib import Path
 
 # import click
@@ -11,10 +10,9 @@ from dotenv import find_dotenv, load_dotenv
 from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset
 
+from src.utils import download_blob
 
-# @click.command()
-# @click.argument("input_filepath", type=click.Path(exists=True))
-# @click.argument("output_filepath", type=click.Path())
+
 class CreateData:
     def __init__(self):
         """Runs data processing scripts to turn raw data from (../raw) into
@@ -26,40 +24,9 @@ class CreateData:
         self.input_path = "data/raw/"
         self.output_path = "data/processed/"
 
-    def load_kaggle(self):
-        load_dotenv(".env")
-
-        # Check that kaggle API authentication works
-        try:
-            import kaggle
-        except OSError as e:
-            print("Kaggle API error:")
-            print(e)
-            exit()
-
-        # Download zipped data
-        kaggle.api.dataset_download_file(
-            "clmentbisaillon/fake-and-real-news-dataset",
-            "Fake.csv",
-            path=self.input_path,
-        )
-        kaggle.api.dataset_download_file(
-            "clmentbisaillon/fake-and-real-news-dataset",
-            "True.csv",
-            path=self.input_path,
-        )
-
-        # Unzip data
-        with zipfile.ZipFile(
-            os.path.join(self.input_path, "Fake.csv.zip"), "r"
-        ) as zip_ref:
-            zip_ref.extractall(self.input_path)
-        with zipfile.ZipFile(
-            os.path.join(self.input_path, "True.csv.zip"), "r"
-        ) as zip_ref:
-            zip_ref.extractall(self.input_path)
-        os.remove(self.input_path + "Fake.csv.zip")
-        os.remove(self.input_path + "True.csv.zip")
+    def download_data(self):
+        download_blob("fake_real_news_bucket", "Fake.csv", "data/raw/Fake.csv")
+        download_blob("fake_real_news_bucket", "True.csv", "data/raw/True.csv")
 
     def merge_csv(self):
         fake = pd.read_csv(self.input_path + "Fake.csv")  # Load csv
@@ -95,7 +62,7 @@ class CreateData:
         ):
             pass
         else:
-            self.load_kaggle()
+            self.download_data()
             self.merge_csv()
             self.split()
 

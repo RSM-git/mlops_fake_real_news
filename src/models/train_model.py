@@ -10,7 +10,7 @@ from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 import wandb
 from src.data.make_dataset import CreateData
 from src.models.model import FakeNewsClassifier
-from src.utils import load_yaml
+from src.utils import load_yaml, upload_blob
 
 
 @click.command()
@@ -59,6 +59,8 @@ def main(config_file: str):
         train_dataloaders=dl_train,
         val_dataloaders=dl_val,
     )
+
+    upload_blob("fake_real_news_bucket", "models/best_model.ckpt", "best_model.ckpt")
 
 
 if __name__ == "__main__":

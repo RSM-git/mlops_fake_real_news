@@ -1,0 +1,3 @@
+models/*.ckpt
+models/pretrained_models/*
+tokenizers/*
