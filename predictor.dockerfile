@@ -15,14 +15,7 @@ RUN pip install -r requirements.txt --no-cache-dir
 
 # copy relevant folders
 COPY src/ src/
-
-# should these be included?
-COPY tests/ tests/
 COPY tokenizers/ tokenizers/
-
-# SECRET FILES
-COPY .env .env
-COPY application_default_credentials.json auth.json
 
 # uvicorn - start hosting
 CMD exec uvicorn src.models.predict_model:app --port 8000 --host 0.0.0.0 --workers 1

@@ -1,12 +1,9 @@
 import os
 
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from google.cloud import storage
 
 from src.models.model import FakeNewsClassifier
-
-load_dotenv(".env")
 
 app = FastAPI()
 
@@ -25,11 +22,17 @@ model.eval()
 
 
 @app.get("/")
-def root():
-    return {"Hello": "World"}
+async def root():
+    return {"Root": "Root"}
 
 
 @app.get("/predict/{text}")
-def predict(text: str):
+async def predict_get(text: str):
     prediction = model.predict_from_str(text)
     return {"prediction": prediction}
+
+
+@app.post("/predict/")
+async def predict_post(text: str):
+    prediction = model.predict_from_str(text)
+    return prediction

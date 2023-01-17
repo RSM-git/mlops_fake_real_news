@@ -8,9 +8,6 @@ wandb/
 !*.csv.dvc
 !data/raw/True.csv.dvc
 
-# google auth
-application_default_credentials.json
-
 # Tokenizers
 tokenizers/
 
