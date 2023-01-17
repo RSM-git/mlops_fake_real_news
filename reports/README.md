@@ -148,7 +148,7 @@ We chose to work with the huggingface transformers framework to perform the natu
 >
 > Answer:
 
-We agreed to use a Python 3.9 virtual environment. We'd then pip install the packages defined in the 'requirements.txt' file. If a new package is required, we'd push the updated requirements file, and prompt people to install the new packages.
+We agreed to use a Python 3.9 virtual environment. We would then pip install the packages defined in the 'requirements.txt' file. If a new package is required, we would push the updated requirements file, and prompt people to install the new packages, such that the environment was up-to-date with the project.
 
 ### Question 5
 
@@ -163,7 +163,7 @@ We agreed to use a Python 3.9 virtual environment. We'd then pip install the pac
 > *experiments.*
 > Answer:
 
---- question 5 fill here ---
+We did utilize the Cookiecutter template. From /src/data/ we created the raw and processed datasets, and put them in the /data/ folder. The model checkpoints were saved in the /models/ folder. The model specification-, training- , and prediction- files were located in the /src/models/ folder. Most code from here is added to the root folder, or added in new folders, also in the root.
 
 ### Question 6
 
@@ -241,7 +241,7 @@ Every time we started working on a new feature in the project we created a new b
 >
 > Answer:
 
---- question 10 fill here ---
+We did try, but we were unable to pull data properly.
 
 ### Question 11
 
@@ -257,7 +257,7 @@ Every time we started working on a new feature in the project we created a new b
 >
 > Answer:
 
---- question 11 fill here ---
+We used unittests, accompanied by Codecov...
 
 ## Running code and tracking experiments
 

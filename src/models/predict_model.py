@@ -7,7 +7,7 @@ from src.models.model import FakeNewsClassifier
 
 app = FastAPI()
 
-bucket_name = "model-bucket-test123"
+bucket_name = "fake_real_news_bucket"
 blob_name = "best_model.ckpt"
 
 storage_client = storage.Client(project="corded-pivot-374409")
