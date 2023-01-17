@@ -26,4 +26,5 @@ dvc[gs]
 scikit-learn
 fastapi
 uvicorn
+google
 google-cloud-storage
