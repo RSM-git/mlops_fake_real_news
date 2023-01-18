@@ -547,7 +547,7 @@ The overall problem is basically administration in GCP. We can do everything off
 >
 > Answer:
 
-Student s204119
+Student s204119 was in charge of merging the data csv files, working with understanding and reading about everything, and help where there else were problems.
 <br><br>
 Student s204122 was in charge of deploying an inference model on Cloud Run, as well as working with the Kaggle API to download data, and configuring the initial hydra and docker setup.
 <br><br>
