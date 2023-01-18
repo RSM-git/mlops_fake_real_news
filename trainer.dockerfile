@@ -11,11 +11,9 @@ COPY setup.py setup.py
 COPY requirements.txt requirements.txt
 
 # install requirements
-
-# copy relevant folders
 RUN pip install -r requirements.txt --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu
 
-
+# copy relevant folders
 COPY src/ src/
 COPY data/processed data/processed
 COPY data/raw data/raw
