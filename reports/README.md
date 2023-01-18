@@ -480,7 +480,11 @@ It could also be relevant to monitor deployment steps, such as automatic Docker 
 > Answer:
 
 We can't find a detailed overview of every single members credit usage. However, we did use about 3$ worth of credits.
+      
 ![Text](figures/credits.png)
+
+      
+The table shows how Cloud Storage uses most of our financial resources. This is probably because Docker images/containers are quite large.      
 | **Service**    | **Price** |
 |----------------|-----------|
 | Cloud Build    | 0.02$     |
@@ -544,10 +548,10 @@ The overall problem is basically administration in GCP. We can do everything off
 > Answer:
 
 Student s204119
-<br>
+<br><br>
 Student s204122 was in charge of deploying an inference model on Cloud Run, as well as working with the Kaggle API to download data, and configuring the initial hydra and docker setup.
-<br>
+<br><br>
 Student s204135
-<br>
+<br><br>
 Student s204141
-<br>
+<br><br>
