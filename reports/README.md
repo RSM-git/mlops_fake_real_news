@@ -529,4 +529,11 @@ Text: "AI will contribute positively to society" <br>
 >
 > Answer:
 
---- question 27 fill here ---
+Student s204119
+<br>
+Student s204122 was in charge of deploying an inference model on Cloud Run, as well as working with the Kaggle API to download data, and configuring the initial hydra and docker setup.
+<br>
+Student s204135
+<br>
+Student s204141
+<br>
