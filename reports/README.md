@@ -491,6 +491,7 @@ Text: "AI will contribute positively to society" <br>
 We did not implement monitoring of our deployed model. It would be relevant to keep track of inference time, as well as tracking if the model simply doesn't work. This way, we can quickly find possible errors and bottlenecks. This way we can more easily make the user experience better for the user.
 Inference time is probably often impacted by the model, networking, or computational resources of the server. All these aspects should be tracked continuously.
 It could also be relevant to monitor deployment steps, such as automatic Docker container building, or when we update the Cloud Run service. It's important that our model/product works properly before pushing the final revision to production.
+The obvious choice for monitoring framework would be OpenTelemetry, or something similar.
 
 ### Question 24
 
@@ -542,7 +543,23 @@ And here is a list of prices for each service:
 
 ![system architecture image](figures/systemarchitecture.png)
 
---- question 25 fill here ---
+The starting point is our local setup.
+1) The primary way for local development to reach the cloud, is through the Github repository.
+- Before committing to the repo, we have defined a pre-commit hook to take care of formatting before publishing.
+- (We use huggingface transformers in the code)
+- When we push changes to the repo, Docker containers are automatically built, and pushed to the Cloud Container Registry.
+- When containers are updated, so is the Cloud Run app, which is where the inference model is deployed.
+2) Training of the model happend in the Compute Engines.
+- Due to practical errors, it does require some manual instructions to work proerply
+  - This includes pulling Docker images and start the containers, which run the training script
+- Training is tracked in Weights and Biases
+- The data is loaded from a Bucket, which contains a static dataset from Kaggle
+- When training is done, model weights are uploaded to the bucket
+3) The user then interacts with our model API
+- The model is based on the weights from our bucket, but the model itself is deployed on Cloud Run
+- The app uses FastAPI for REST API interaction between server and client
+- The client can send a POST request with a string
+- The server then respons with a label; either "Real" or "Fake"
 
 ### Question 26
 
@@ -575,10 +592,14 @@ The overall problem is basically administration in GCP. We can do everything off
 > Answer:
 
 Student s204119 was in charge of merging the data csv files, working with understanding and reading about everything, and help where there else were problems.
-<br><br>
+\
+\
 Student s204122 was in charge of deploying an inference model on Cloud Run, as well as working with the Kaggle API to download data, and configuring the initial hydra and docker setup.
-<br><br>
-Student s204135
-<br><br>
+\
+\
+Student s204135 was in charge of implementing the PyTorch Lightning Module and initializing the huggingface model, and setting Cloud Build up for continuous integration / continuous deployment, by running the Cloud Build, which also pushed updates to Cloud Run when changes were pushed to main. Additionally set up CodeCov for the repository, in such a way that unittests weren't counted in the coverage report.
+\
+\
 Student s204141
-<br><br>
+\
+\
