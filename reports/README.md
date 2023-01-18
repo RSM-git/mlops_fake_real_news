@@ -600,6 +600,11 @@ Student s204122 was in charge of deploying an inference model on Cloud Run, as w
 Student s204135 was in charge of implementing the PyTorch Lightning Module and initializing the huggingface model, and setting Cloud Build up for continuous integration / continuous deployment, by running the Cloud Build, which also pushed updates to Cloud Run when changes were pushed to main. Additionally set up CodeCov for the repository, in such a way that unittests weren't counted in the coverage report.
 \
 \
-Student s204141
+Student s204141 restructured make_dataset to be class oriented and fixed vital bugs, also changed the download from kaggle to google buckets. Implemented, get_dataloader and the custom collate function.
+Set up dvc and uploaded data  to the bucket.
+Wrote the data utils file.
+Did profiling and wrote the make commands for docker and training.
+Wrote the train docker file and trained the models.
+Implemented pre-commit.
 \
 \
