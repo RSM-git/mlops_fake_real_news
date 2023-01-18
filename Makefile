@@ -20,6 +20,18 @@ endif
 # COMMANDS                                                                      #
 #################################################################################
 
+## Docker
+docker_build_train:
+	docker build -t train:latest -f trainer.dockerfile .
+
+docker_run_train:
+	docker run --name train train:latest
+
+docker_push_train:
+	docker tag train gcr.io/corded-pivot-374409/train
+	docker push gcr.io/corded-pivot-374409/train
+
+
 ## Install Python Dependencies
 requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
@@ -37,6 +49,10 @@ train:
 
 train_gpu:
 	$(PYTHON_INTERPRETER) src/models/train_model.py --config_file train_gpu.yaml
+
+profile_train:
+	snakeviz train_profile.prof
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete

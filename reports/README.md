@@ -58,13 +58,13 @@ end of the project.
 * [x] Add a model file and a training script and get that running
 * [x] Remember to fill out the `requirements.txt` file with whatever dependencies that you are using
 * [x] Remember to comply with good coding practices (`pep8`) while doing the project
-* [ ] Do a bit of code typing and remember to document essential parts of your code
-* [ ] Setup version control for your data or part of your data
-* [ ] Construct one or multiple docker files for your code
-* [ ] Build the docker files locally and make sure they work as intended
+* [x] Do a bit of code typing and remember to document essential parts of your code
+* [x] Setup version control for your data or part of your data
+* [x] Construct one or multiple docker files for your code
+* [x] Build the docker files locally and make sure they work as intended
 * [x] Write one or multiple configurations files for your experiments
-* [ ] Used Hydra to load the configurations and manage your hyperparameters
-* [ ] When you have something that works somewhat, remember at some point to to some profiling and see if
+* [-] Used Hydra to load the configurations and manage your hyperparameters
+* [x] When you have something that works somewhat, remember at some point to do some profiling and see if
       you can optimize your code
 * [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code. Additionally,
       consider running a hyperparameter optimization sweep.
@@ -72,16 +72,16 @@ end of the project.
 
 ### Week 2
 
-* [ ] Write unit tests related to the data part of your code
+* [x] Write unit tests related to the data part of your code
 * [ ] Write unit tests related to model construction and or model training
 * [x] Calculate the coverage.
 * [x] Get some continuous integration running on the github repository
-* [ ] Create a data storage in GCP Bucket for you data and preferable link this with your data version control setup
-* [ ] Create a trigger workflow for automatically building your docker images
-* [ ] Get your model training in GCP using either the Engine or Vertex AI
-* [ ] Create a FastAPI application that can do inference using your model
+* [x] Create a data storage in GCP Bucket for you data and preferable link this with your data version control setup
+* [x] Create a trigger workflow for automatically building your docker images
+* [x] Get your model training in GCP using either the Engine or Vertex AI
+* [x] Create a FastAPI application that can do inference using your model
 * [ ] If applicable, consider deploying the model locally using torchserve
-* [ ] Deploy your model in GCP using either Functions or Run as the backend
+* [x] Deploy your model in GCP using either Functions or Run as the backend
 
 ### Week 3
 
@@ -148,7 +148,9 @@ We chose to work with the huggingface transformers framework to perform the natu
 >
 > Answer:
 
-We agreed to use a Python 3.9 virtual environment. We would then pip install the packages defined in the 'requirements.txt' file. If a new package is required, we would push the updated requirements file, and prompt people to install the new packages, such that the environment was up-to-date with the project.
+Each member had a Python 3.9 virtual environment that we reserved for the project.
+We would then pip install the packages defined in the 'requirements.txt' file. If a new package is required, we would push the updated requirements file, and prompt people to install the new packages, such that the environment was up-to-date with the project.
+Specifically, they would run ```pip install -r requirements.txt``` inside of their conda environment.
 
 ### Question 5
 
@@ -164,6 +166,8 @@ We agreed to use a Python 3.9 virtual environment. We would then pip install the
 > Answer:
 
 We did utilize the Cookiecutter template. From /src/data/ we created the raw and processed datasets, and put them in the /data/ folder. The model checkpoints were saved in the /models/ folder. The model specification-, training- , and prediction- files were located in the /src/models/ folder. Most code from here is added to the root folder, or added in new folders, also in the root.
+We added a configs directory in root to store the configuration files.
+We also added a utils.py file to src and another utils.py to src/models
 
 ### Question 6
 
@@ -176,8 +180,9 @@ We did utilize the Cookiecutter template. From /src/data/ we created the raw and
 
 We used Black Formatter which let us write a lot of code with out thinking much about the pretty setup.
 We used isort which sorts the imports, both in alphabetical order and seperate them by type.
-We used Flake8
-It is important to have a guideline when programming. In larger projects code can be confussing if written with different formatting or if the quality of code is changing all the time. In our project the code quality varies, and therefore we help the ones lacking by rewriting what the meant by the code after they made it.
+We used Flake8 to conform with official coding standard.
+It is important to have a guideline when programming. In larger projects code can be confusing if written with different formatting or if the quality of code is changing all the time. In our project the code quality varies, and therefore we help the ones lacking by rewriting what the meant by the code after they made it.
+To enforce these standards we used the pre-commit library which required some initial configuration to make them work together without being stuck in a loop but otherwise it worked very well.
 
 ## Version control
 
@@ -197,6 +202,7 @@ It is important to have a guideline when programming. In larger projects code ca
 > Answer:
 
 We implemented multiple tests, which focused on different acpects of the code. Primarily we did unittests on the dataset, because there was alot fiddeling around with it.
+While these unit tests for the data was very useful before writing the gitactions, we were unable to run them through gitactions as we have quite a few certificates that needs to be stores as github secrets, but we had trouble making it work on our repo.
 
 ### Question 8
 
@@ -211,7 +217,8 @@ We implemented multiple tests, which focused on different acpects of the code. P
 >
 > Answer:
 
-We have a code coverage of 35%, which includes the source code.
+We have a code coverage of 35%, which includes the source code and importantly excludes the test code as to not artificially boost coverage.
+We're aware that this is on the low side but a lot of the code that isn't tested are the "main" functions such as train_model which might be difficult to implement as a unit test as these functions combines the code of which much of it should have been unit tested.
 
 ### Question 9
 
@@ -226,7 +233,9 @@ We have a code coverage of 35%, which includes the source code.
 >
 > Answer:
 
-Every time we started working on a new feature in the project we created a new branch. After we had implementet that thing and merged we deleted the branch, and created a new one when we started on a new task. We implemented that every pull request should be verified by another member of the group, in that way one person should not be able to mess things up, example like uploading all the data, or deleting main things. Before the pull request even got to Github we checked the code with pre-commit test. Testing the the code could run.
+Every time we started working on a new feature in the project we created a new branch. After we had implementet that thing and merged we deleted the branch, and created a new one when we started on a new task. We implemented that every pull request should be verified by another member of the group, in that way one person should not be able to mess things up, example like uploading all the data, or deleting main things. Before the pull request even got to Github we checked the code with pre-commit test.
+We also had a git action to run the unit tests and denied merging until all passed.
+We strifed for trunk-based development which seems effective for such a fast paced project.
 
 ### Question 10
 
@@ -241,7 +250,10 @@ Every time we started working on a new feature in the project we created a new b
 >
 > Answer:
 
-We did try, but we were unable to pull data properly.
+We did use dvc and used it initially to push the data to the google bucket.
+Since we only pushed the raw data which remained unchanged throughout the project, there wasn't much use for dvc.
+In a business scenario the data is much more likely to change. If the company is developing a new project for which data is not readily available, they have to create it themselves and by that, the data is prone to changes in which case data version control is very important.
+You need to be able to easily discern if improvements or degradations is caused by changes in the data or in the model architecture.
 
 ### Question 11
 
@@ -257,7 +269,14 @@ We did try, but we were unable to pull data properly.
 >
 > Answer:
 
-We used unittests, accompanied by Codecov...
+We used unittests and CodeCov in a single workflow file plus some configuration for CodeCov to make it ignore the tests themselves which was very tedious to make work.
+We did make use of caches to speed up the process.
+The workflow file can be seen [here](https://github.com/RSM-git/mlops_fake_real_news/blob/main/.github/workflows/tests.yml).
+If we also count the pre-commit as CI, then as previously mentioned, we used black, Flake8 and isort.
+The pre-commit settings can be seen [here](https://github.com/RSM-git/mlops_fake_real_news/blob/main/.pre-commit-config.yaml).
+The important settings are --profile=black in isort, --max-line-length=88 and --extend-ignore=E203 to make the actions work together. Very important to use extend-ignore instead of ignore as otherwise, some already set ignores are overwritten which are necessary since there are at least two standards which contradict eachother.
+Without these settings, the pre-commit could loop forever by isort changing one thing and black changing it back etc.
+
 
 ## Running code and tracking experiments
 
@@ -276,7 +295,10 @@ We used unittests, accompanied by Codecov...
 >
 > Answer:
 
-We used config files, and could run the code with "make train" exampele.
+We used config yaml files to organize experiments.
+We loaded the yaml file and passed it to our wandb logger such that all hyperparameters were logged in wandb.
+This is the reason why we decided not to use hydra as wandb can already do everything that we wanted from hydra with the added advantage of having everything stored online.
+
 
 ### Question 13
 
@@ -291,7 +313,9 @@ We used config files, and could run the code with "make train" exampele.
 >
 > Answer:
 
---- question 13 fill here ---
+We used config files logged to wandb to ensure that we always could choose the same hyperparameters.
+Additionally, we used seeds which in a deep learning setting is not always completely deterministic, but it certainly helps mimic behavior.
+
 
 ### Question 14
 
