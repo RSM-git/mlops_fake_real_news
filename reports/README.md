@@ -527,7 +527,23 @@ And here is a list of prices for each service:
 
 ![system architecture image](figures/systemarchitecture.png)      
       
---- question 25 fill here ---
+The starting point is our local setup. 
+1) The primary way for local development to reach the cloud, is through the Github repository. 
+- Before committing to the repo, we have defined a pre-commit hook to take care of formatting before publishing. 
+- (We use huggingface transformers in the code)
+- When we push changes to the repo, Docker containers are automatically built, and pushed to the Cloud Container Registry.
+- When containers are updated, so is the Cloud Run app, which is where the inference model is deployed.
+2) Training of the model happend in the Compute Engines. 
+- Due to practical errors, it does require some manual instructions to work proerply
+  - This includes pulling Docker images and start the containers, which run the training script
+- Training is tracked in Weights and Biases
+- The data is loaded from a Bucket, which contains a static dataset from Kaggle
+- When training is done, model weights are uploaded to the bucket
+3) The user then interacts with our model API
+- The model is based on the weights from our bucket, but the model itself is deployed on Cloud Run
+- The app uses FastAPI for REST API interaction between server and client
+- The client can send a POST request with a string
+- The server then respons with a label; either "Real" or "Fake"
 
 ### Question 26
 
