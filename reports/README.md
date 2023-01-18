@@ -276,6 +276,7 @@ If we also count the pre-commit as CI, then as previously mentioned, we used bla
 The pre-commit settings can be seen [here](https://github.com/RSM-git/mlops_fake_real_news/blob/main/.pre-commit-config.yaml).
 The important settings are --profile=black in isort, --max-line-length=88 and --extend-ignore=E203 to make the actions work together. Very important to use extend-ignore instead of ignore as otherwise, some already set ignores are overwritten which are necessary since there are at least two standards which contradict eachother.
 Without these settings, the pre-commit could loop forever by isort changing one thing and black changing it back etc.
+We also update services on the cloud on each push to the Github repository. We automatically built Docker images using the Cloud Build service. Since our Cloud Run app is dependent on the Docker image, we also update the Cloud Run container automatically as well.
 
 
 ## Running code and tracking experiments
@@ -379,7 +380,14 @@ We used the debugger, one in the group had problems with the debugger not workin
 >
 > Answer:
 
---- question 17 fill here ---
+We used the following services:
+- Cloud Run
+- Buckets
+- Container Registry
+- Cloud Build
+- (Experimenting with Compute Engines)
+
+Cloud Run is a serverless option for deploying projects. We've used this for inference. Buckets are used to store data files, as well as the model weights, making it easily accesible for the CLoud Run application. We've automatically built Docker images using Cloud Build, and pushed the containers to the container registry. Cloud Build is also responsible for updating the container used for our Cloud Run app. We tried to train the model using Engines, but had technical troubles; hence we continued training locally on GPUs.
 
 ### Question 18
 
@@ -422,7 +430,7 @@ We used the debugger, one in the group had problems with the debugger not workin
 >
 > Answer:
 
---- question 21 fill here ---
+![Text](figures/build_history.png)
 
 ### Question 22
 
