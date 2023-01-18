@@ -576,10 +576,14 @@ The overall problem is basically administration in GCP. We can do everything off
 > Answer:
 
 Student s204119 was in charge of merging the data csv files, working with understanding and reading about everything, and help where there else were problems.
-<br><br>
+\
+\
 Student s204122 was in charge of deploying an inference model on Cloud Run, as well as working with the Kaggle API to download data, and configuring the initial hydra and docker setup.
-<br><br>
-Student s204135
-<br><br>
+\
+\
+Student s204135 was in charge of implementing the PyTorch Lightning Module and initializing the huggingface model, and setting Cloud Build up for continuous integration / continuous deployment, by running the Cloud Build, which also pushed updates to Cloud Run when changes were pushed to main. Additionally set up CodeCov for the repository, in such a way that unittests weren't counted in the coverage report.
+\
+\
 Student s204141
-<br><br>
+\
+\
