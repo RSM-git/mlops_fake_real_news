@@ -88,7 +88,7 @@ class FakeNewsClassifier(pl.LightningModule):
         attention_mask = batch["attention_mask"]
         labels = batch["label"]
 
-        predictions = self(input_ids, attention_mask)
+        predictions = self.model(input_ids, attention_mask).logits
         loss = self.criterion(predictions, labels)
         # predictions = logits.argmax(dim=1)
 
