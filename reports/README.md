@@ -412,7 +412,8 @@ We used the debugger, one in the group had problems with the debugger not workin
 >
 > Answer:
 
---- question 20 fill here ---
+![Text](figures/containers.png)
+![Text](figures/predictor_image.png)
 
 ### Question 21
 
