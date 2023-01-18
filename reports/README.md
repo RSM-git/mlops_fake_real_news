@@ -217,8 +217,9 @@ While these unit tests for the data was very useful before writing the gitaction
 >
 > Answer:
 
-We have a code coverage of 35%, which includes the source code and importantly excludes the test code as to not artificially boost coverage.
+We have a code coverage of 50%, which includes the source code and importantly excludes the test code as to not artificially boost coverage.
 We're aware that this is on the low side but a lot of the code that isn't tested are the "main" functions such as train_model which might be difficult to implement as a unit test as these functions combines the code of which much of it should have been unit tested.
+Even if 100% of our code is covered, we can not guarantee that all edge/corner cases are covered. This is why we should take the coverage measure with a grain of salt. 
 
 ### Question 9
 
