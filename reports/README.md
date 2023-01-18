@@ -348,9 +348,16 @@ Additionally, we used seeds which in a deep learning setting is not always compl
 > *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
+We used a Docker image for training, and one for prediction/inference. The trainer file utilizes most files. It needs data files, model files, config files, and other kinds of utility files. The predictor on the other hand only needs to load the model weights to the model. The weights themselves are saved into a bucket, which is obviously located outside the Docker container.
+      
+<br>      
+Link to:
+Predictor Docker file: <br>
+https://github.com/RSM-git/mlops_fake_real_news/blob/report/predictor.dockerfile
 
---- question 15 fill here ---
-
+Trainer Docker file:<br>
+https://github.com/RSM-git/mlops_fake_real_news/blob/report/trainer.dockerfile
+      
 ### Question 16
 
 > **When running into bugs while trying to run your experiments, how did you perform debugging? Additionally, did you**
