@@ -476,6 +476,7 @@ Text: "AI will contribute positively to society" <br>
 We did not implement monitoring of our deployed model. It would be relevant to keep track of inference time, as well as tracking if the model simply doesn't work. This way, we can quickly find possible errors and bottlenecks. This way we can more easily make the user experience better for the user.
 Inference time is probably often impacted by the model, networking, or computational resources of the server. All these aspects should be tracked continuously.
 It could also be relevant to monitor deployment steps, such as automatic Docker container building, or when we update the Cloud Run service. It's important that our model/product works properly before pushing the final revision to production.
+The obvious choice for monitoring framework would be OpenTelemetry, or something similar.
 
 ### Question 24
 
