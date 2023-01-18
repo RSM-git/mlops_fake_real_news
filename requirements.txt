@@ -19,7 +19,6 @@ torch
 pytest
 pytorch-lightning
 wandb
-kaggle
 pre-commit
 wandb
 dvc[gs]
@@ -28,3 +27,4 @@ fastapi
 uvicorn
 google
 google-cloud-storage
+snakeviz
