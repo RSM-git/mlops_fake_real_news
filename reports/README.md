@@ -219,7 +219,7 @@ While these unit tests for the data was very useful before writing the gitaction
 
 We have a code coverage of 50%, which includes the source code and importantly excludes the test code as to not artificially boost coverage.
 We're aware that this is on the low side but a lot of the code that isn't tested are the "main" functions such as train_model which might be difficult to implement as a unit test as these functions combines the code of which much of it should have been unit tested.
-Even if 100% of our code is covered, we can not guarantee that all edge/corner cases are covered. This is why we should take the coverage measure with a grain of salt. 
+Even if 100% of our code is covered, we can not guarantee that all edge/corner cases are covered. This is why we should take the coverage measure with a grain of salt.
 
 ### Question 9
 
@@ -334,7 +334,20 @@ Additionally, we used seeds which in a deep learning setting is not always compl
 >
 > Answer:
 
---- question 14 fill here ---
+We performed an experiment with the following hyperparameters: ![](figures/experiment_hparams.png)
+We kept all the hyper parameters the same except for the limit_train_batches witch makes it so the model only uses a fraction of training data.
+We tried three different values and looked at how this hyper parameter affected the validation accuracy. Since we used early stopping, not all experiments ran for the full five epochs.
+
+1% training data:
+![](figures/experiment_acc1.png)
+
+10% training data:
+![](figures/experiment_acc10.png)
+
+20% training data:
+![](figures/experiment_acc20.png)
+
+As one might expect, the validation accuracy increases the more training data we use as it makes it more difficult to overfitting.
 
 ### Question 15
 
@@ -349,15 +362,15 @@ Additionally, we used seeds which in a deep learning setting is not always compl
 >
 > Answer:
 We used a Docker image for training, and one for prediction/inference. The trainer file utilizes most files. It needs data files, model files, config files, and other kinds of utility files. The predictor on the other hand only needs to load the model weights to the model. The weights themselves are saved into a bucket, which is obviously located outside the Docker container.
-      
-<br>      
+
+<br>
 Link to:
 Predictor Docker file: <br>
 https://github.com/RSM-git/mlops_fake_real_news/blob/report/predictor.dockerfile
 
 Trainer Docker file:<br>
 https://github.com/RSM-git/mlops_fake_real_news/blob/report/trainer.dockerfile
-      
+
 ### Question 16
 
 > **When running into bugs while trying to run your experiments, how did you perform debugging? Additionally, did you**
@@ -372,9 +385,9 @@ https://github.com/RSM-git/mlops_fake_real_news/blob/report/trainer.dockerfile
 > Answer:
 
 We used the debugger, one in the group had problems with the debugger not working and used print states and old ways of debugging.
-When debugging Docker containers, it was helpful to utilize caching, such that we would not install 1GB of pytorch and its dependancies on every build. 
+When debugging Docker containers, it was helpful to utilize caching, such that we would not install 1GB of pytorch and its dependancies on every build.
 In general, we tried to make thing work locally, and then deploy to production afterwards. Doing so, will eliminate suspicion of our logical code, and make sure that the remaining error are associated with administrating the cloud services.
-      
+
 ## Working in the cloud
 
 > In the following section we would like to know more about your experience when developing in the cloud.
@@ -412,7 +425,9 @@ Cloud Run is a serverless option for deploying projects. We've used this for inf
 >
 > Answer:
 
---- question 18 fill here ---
+To train in the cloud, we used a e2-medium x86/64 cpu machine. We hosted it on europe-west1-b and built it from the train docker image that we had already pushed to the container registry.
+This made it really easy to use since we just had to start the machine and it would begin running the container immediately and push the model the bucket.
+While we had shown that we were able to train in the cloud, we chose to do the experiments locally on a gpu machine as this sped up training significantly and reduced the cost.
 
 ### Question 19
 
@@ -490,11 +505,11 @@ It could also be relevant to monitor deployment steps, such as automatic Docker 
 > Answer:
 
 We can't find a detailed overview of every single members credit usage. However, we did use about 3$ worth of credits.
-      
+
 ![Text](figures/credits.png)
 
-      
-The table shows how Cloud Storage uses most of our financial resources. This is probably because Docker images/containers are quite large.      
+
+The table shows how Cloud Storage uses most of our financial resources. This is probably because Docker images/containers are quite large.
 | **Service**    | **Price** |
 |----------------|-----------|
 | Cloud Build    | 0.02$     |
@@ -525,8 +540,8 @@ And here is a list of prices for each service:
 >
 > Answer:
 
-![system architecture image](figures/systemarchitecture.png)      
-      
+![system architecture image](figures/systemarchitecture.png)
+
 --- question 25 fill here ---
 
 ### Question 26
