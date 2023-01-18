@@ -372,7 +372,9 @@ https://github.com/RSM-git/mlops_fake_real_news/blob/report/trainer.dockerfile
 > Answer:
 
 We used the debugger, one in the group had problems with the debugger not working and used print states and old ways of debugging.
-
+When debugging Docker containers, it was helpful to utilize caching, such that we would not install 1GB of pytorch and its dependancies on every build. 
+In general, we tried to make thing work locally, and then deploy to production afterwards. Doing so, will eliminate suspicion of our logical code, and make sure that the remaining error are associated with administrating the cloud services.
+      
 ## Working in the cloud
 
 > In the following section we would like to know more about your experience when developing in the cloud.
