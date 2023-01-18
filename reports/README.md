@@ -446,7 +446,9 @@ Cloud Run is a serverless option for deploying projects. We've used this for inf
 >
 > Answer:
 
---- question 22 fill here ---
+We've deployed our app (inference) using Cloud Run. Using the FastAPI framework, it is possible to POST a prediction request, containing a news article title as a string. The output will be a string saying either "Real" or "Fake" news. The following curl command is an example of a string, which should return "Real" news: <br>
+Text: "AI will contribute positively to society" <br>
+`curl -X "POST" "https://predictor-z2dikzecbq-ez.a.run.app/predict/?text=AI%20will%20contribute%20positively%20to%20society" -H "accept: application/json" -d ""`
 
 ### Question 23
 
