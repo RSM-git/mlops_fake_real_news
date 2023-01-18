@@ -525,6 +525,8 @@ And here is a list of prices for each service:
 >
 > Answer:
 
+![system architecture image](figures/systemarchitecture.png)      
+      
 --- question 25 fill here ---
 
 ### Question 26
