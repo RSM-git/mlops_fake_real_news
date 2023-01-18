@@ -477,7 +477,18 @@ Text: "AI will contribute positively to society" <br>
 >
 > Answer:
 
---- question 24 fill here ---
+We can't find a detailed overview of every single members credit usage. However, we did use about 3$ worth of credits.
+![Text](figures/credits.png)
+| **Service**    | **Price** |
+|----------------|-----------|
+| Cloud Build    | 0.02$     |
+| Cloud Run      | 0.04$     |
+| Cloud Storage  | 2.04$     |
+| Compute Engine | 0.21$     |
+| Networking     | 0.08$     |
+
+And here is a list of prices for each service:
+![Text](figures/pricing.png)
 
 ## Overall discussion of project
 
@@ -512,7 +523,8 @@ Text: "AI will contribute positively to society" <br>
 >
 > Answer:
 
-The biggest challenges we associated with the Google Cloud Platform. We were able to train models locally, but there was a lot of obstacles when trying to train in the cloud. We were de
+The biggest challenges we associated with the Google Cloud Platform. We were able to train models locally, but there was a lot of obstacles when trying to train in the cloud. Somehow we were not able to create a VM-instance from a Docker container. Also, we were simply not able to use Vertex AI. <br>
+The overall problem is basically administration in GCP. We can do everything offline, but are limited by GCP.
 
 ### Question 27
 
