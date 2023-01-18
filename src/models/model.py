@@ -83,7 +83,7 @@ class FakeNewsClassifier(pl.LightningModule):
         input_ids = encoding["input_ids"]
         attention_mask = encoding["attention_mask"]
 
-        logits = self.model(input_ids, attention_mask)
+        logits = self(input_ids, attention_mask)
         out = torch.argmax(logits)
 
         return "Real" if out else "Fake"
@@ -100,7 +100,7 @@ class FakeNewsClassifier(pl.LightningModule):
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
         labels = batch["label"]
-        logits = self.model(input_ids, attention_mask)
+        logits = self(input_ids, attention_mask)
         loss = self.criterion(logits, labels)
         predictions = logits.argmax(dim=1)
         self.training_metrics["accuracy"](predictions, labels)
@@ -127,7 +127,7 @@ class FakeNewsClassifier(pl.LightningModule):
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
         labels = batch["label"]
-        logits = self.model(input_ids, attention_mask)
+        logits = self(input_ids, attention_mask)
         loss = self.criterion(logits, labels)
         predictions = logits.argmax(dim=1)
         self.validation_metrics["accuracy"](predictions, labels)
@@ -153,7 +153,7 @@ class FakeNewsClassifier(pl.LightningModule):
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
         labels = batch["label"]
-        logits = self.model(input_ids, attention_mask)
+        logits = self(input_ids, attention_mask)
         loss = self.criterion(logits, labels)
 
         return loss
