@@ -270,13 +270,13 @@ You need to be able to easily discern if improvements or degradations is caused 
 > Answer:
 
 We used unittests and CodeCov in a single workflow file plus some configuration for CodeCov to make it ignore the tests themselves which was very tedious to make work.
-We did make use of caches to speed up the process.
+We did make use of caches to speed up the process. The workflow file builds a Python 3.9 environment running on Ubuntu.\\
 The workflow file can be seen [here](https://github.com/RSM-git/mlops_fake_real_news/blob/main/.github/workflows/tests.yml).
 If we also count the pre-commit as CI, then as previously mentioned, we used black, Flake8 and isort.
 The pre-commit settings can be seen [here](https://github.com/RSM-git/mlops_fake_real_news/blob/main/.pre-commit-config.yaml).
 The important settings are --profile=black in isort, --max-line-length=88 and --extend-ignore=E203 to make the actions work together. Very important to use extend-ignore instead of ignore as otherwise, some already set ignores are overwritten which are necessary since there are at least two standards which contradict eachother.
 Without these settings, the pre-commit could loop forever by isort changing one thing and black changing it back etc.
-We also update services on the cloud on each push to the Github repository. We automatically built Docker images using the Cloud Build service. Since our Cloud Run app is dependent on the Docker image, we also update the Cloud Run container automatically as well.
+We also update services on the cloud on each push to the Github repository as part of our CI. We automatically built Docker images using the Cloud Build service. Since our Cloud Run app is dependent on the Docker image, we configured permissions for the Cloud Build service, such that it was able to update the Cloud Run instance.
 
 
 ## Running code and tracking experiments
