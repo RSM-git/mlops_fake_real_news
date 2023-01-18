@@ -412,7 +412,7 @@ Cloud Run is a serverless option for deploying projects. We've used this for inf
 >
 > Answer:
 
---- question 18 fill here ---
+We tried training our model automatically using the Compute Engine. Due to some practicalities with GCP. We did however manage to train our models using these VM-instances/Engines, if we accessed them manually. From here, we could pull Docker containers from the registry, and from these, run the training script. Even if this was possible, we had more success running the model offline, where we had access to GPUs.
 
 ### Question 19
 
