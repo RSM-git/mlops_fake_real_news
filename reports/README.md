@@ -403,7 +403,7 @@ We used the debugger, one in the group had problems with the debugger not workin
 >
 > Answer:
 
---- question 19 fill here ---
+![Text](figures/my_bucket.png)
 
 ### Question 20
 
