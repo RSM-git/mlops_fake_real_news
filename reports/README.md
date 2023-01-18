@@ -512,7 +512,7 @@ Text: "AI will contribute positively to society" <br>
 >
 > Answer:
 
---- question 26 fill here ---
+The biggest challenges we associated with the Google Cloud Platform. We were able to train models locally, but there was a lot of obstacles when trying to train in the cloud. We were de
 
 ### Question 27
 
