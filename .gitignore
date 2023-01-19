@@ -1,3 +1,6 @@
+# profiling
+*.prof
+
 # secrets
 corded-pivot-374409-dbccae470422.json
 

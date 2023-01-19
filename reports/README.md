@@ -217,8 +217,9 @@ While these unit tests for the data was very useful before writing the gitaction
 >
 > Answer:
 
-We have a code coverage of 35%, which includes the source code and importantly excludes the test code as to not artificially boost coverage.
+We have a code coverage of 50%, which includes the source code and importantly excludes the test code as to not artificially boost coverage.
 We're aware that this is on the low side but a lot of the code that isn't tested are the "main" functions such as train_model which might be difficult to implement as a unit test as these functions combines the code of which much of it should have been unit tested.
+Even if 100% of our code is covered, we can not guarantee that all edge/corner cases are covered. This is why we should take the coverage measure with a grain of salt.
 
 ### Question 9
 
@@ -333,7 +334,20 @@ Additionally, we used seeds which in a deep learning setting is not always compl
 >
 > Answer:
 
---- question 14 fill here ---
+We performed an experiment with the following hyperparameters: ![](figures/experiment_hparams.png)
+We kept all the hyper parameters the same except for the limit_train_batches witch makes it so the model only uses a fraction of training data.
+We tried three different values and looked at how this hyper parameter affected the validation accuracy. Since we used early stopping, not all experiments ran for the full five epochs.
+
+1% training data:
+![](figures/experiment_acc1.png)
+
+10% training data:
+![](figures/experiment_acc10.png)
+
+20% training data:
+![](figures/experiment_acc20.png)
+
+As one might expect, the validation accuracy increases the more training data we use as it makes it more difficult to overfitting.
 
 ### Question 15
 
@@ -347,8 +361,15 @@ Additionally, we used seeds which in a deep learning setting is not always compl
 > *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
+We used a Docker image for training, and one for prediction/inference. The trainer file utilizes most files. It needs data files, model files, config files, and other kinds of utility files. The predictor on the other hand only needs to load the model weights to the model. The weights themselves are saved into a bucket, which is obviously located outside the Docker container.
 
---- question 15 fill here ---
+<br>
+Link to:
+Predictor Docker file: <br>
+https://github.com/RSM-git/mlops_fake_real_news/blob/report/predictor.dockerfile
+
+Trainer Docker file:<br>
+https://github.com/RSM-git/mlops_fake_real_news/blob/report/trainer.dockerfile
 
 ### Question 16
 
@@ -364,6 +385,8 @@ Additionally, we used seeds which in a deep learning setting is not always compl
 > Answer:
 
 We used the debugger, one in the group had problems with the debugger not working and used print states and old ways of debugging.
+When debugging Docker containers, it was helpful to utilize caching, such that we would not install 1GB of pytorch and its dependancies on every build.
+In general, we tried to make thing work locally, and then deploy to production afterwards. Doing so, will eliminate suspicion of our logical code, and make sure that the remaining error are associated with administrating the cloud services.
 
 ## Working in the cloud
 
@@ -402,7 +425,9 @@ Cloud Run is a serverless option for deploying projects. We've used this for inf
 >
 > Answer:
 
---- question 18 fill here ---
+To train in the cloud, we used a e2-medium x86/64 cpu machine. We hosted it on europe-west1-b and built it from the train docker image that we had already pushed to the container registry.
+This made it really easy to use since we just had to start the machine and it would begin running the container immediately and push the model the bucket.
+While we had shown that we were able to train in the cloud, we chose to do the experiments locally on a gpu machine as this sped up training significantly and reduced the cost.
 
 ### Question 19
 
@@ -463,7 +488,10 @@ Text: "AI will contribute positively to society" <br>
 >
 > Answer:
 
---- question 23 fill here ---
+We did not implement monitoring of our deployed model. It would be relevant to keep track of inference time, as well as tracking if the model simply doesn't work. This way, we can quickly find possible errors and bottlenecks. This way we can more easily make the user experience better for the user.
+Inference time is probably often impacted by the model, networking, or computational resources of the server. All these aspects should be tracked continuously.
+It could also be relevant to monitor deployment steps, such as automatic Docker container building, or when we update the Cloud Run service. It's important that our model/product works properly before pushing the final revision to production.
+The obvious choice for monitoring framework would be OpenTelemetry, or something similar.
 
 ### Question 24
 
@@ -477,7 +505,22 @@ Text: "AI will contribute positively to society" <br>
 >
 > Answer:
 
---- question 24 fill here ---
+We can't find a detailed overview of every single members credit usage. However, we did use about 3$ worth of credits.
+
+![Text](figures/credits.png)
+
+
+The table shows how Cloud Storage uses most of our financial resources. This is probably because Docker images/containers are quite large.
+| **Service**    | **Price** |
+|----------------|-----------|
+| Cloud Build    | 0.02$     |
+| Cloud Run      | 0.04$     |
+| Cloud Storage  | 2.04$     |
+| Compute Engine | 0.21$     |
+| Networking     | 0.08$     |
+
+And here is a list of prices for each service:
+![Text](figures/pricing.png)
 
 ## Overall discussion of project
 
@@ -498,7 +541,25 @@ Text: "AI will contribute positively to society" <br>
 >
 > Answer:
 
---- question 25 fill here ---
+![system architecture image](figures/systemarchitecture.png)
+
+The starting point is our local setup.
+1) The primary way for local development to reach the cloud, is through the Github repository.
+- Before committing to the repo, we have defined a pre-commit hook to take care of formatting before publishing.
+- (We use huggingface transformers in the code)
+- When we push changes to the repo, Docker containers are automatically built, and pushed to the Cloud Container Registry.
+- When containers are updated, so is the Cloud Run app, which is where the inference model is deployed.
+2) Training of the model happend in the Compute Engines.
+- Due to practical errors, it does require some manual instructions to work proerply
+  - This includes pulling Docker images and start the containers, which run the training script
+- Training is tracked in Weights and Biases
+- The data is loaded from a Bucket, which contains a static dataset from Kaggle
+- When training is done, model weights are uploaded to the bucket
+3) The user then interacts with our model API
+- The model is based on the weights from our bucket, but the model itself is deployed on Cloud Run
+- The app uses FastAPI for REST API interaction between server and client
+- The client can send a POST request with a string
+- The server then respons with a label; either "Real" or "Fake"
 
 ### Question 26
 
@@ -512,7 +573,8 @@ Text: "AI will contribute positively to society" <br>
 >
 > Answer:
 
---- question 26 fill here ---
+The biggest challenges we associated with the Google Cloud Platform. We were able to train models locally, but there was a lot of obstacles when trying to train in the cloud. Somehow we were not able to create a VM-instance from a Docker container. Also, we were simply not able to use Vertex AI. <br>
+The overall problem is basically administration in GCP. We can do everything offline, but are limited by GCP.
 
 ### Question 27
 
@@ -529,4 +591,20 @@ Text: "AI will contribute positively to society" <br>
 >
 > Answer:
 
---- question 27 fill here ---
+Student s204119 was in charge of merging the data csv files, working with understanding and reading about everything, and help where there else were problems.
+\
+\
+Student s204122 was in charge of deploying an inference model on Cloud Run, as well as working with the Kaggle API to download data, and configuring the initial hydra and docker setup.
+\
+\
+Student s204135 was in charge of implementing the PyTorch Lightning Module and initializing the huggingface model, and setting Cloud Build up for continuous integration / continuous deployment, by running the Cloud Build, which also pushed updates to Cloud Run when changes were pushed to main. Additionally set up CodeCov for the repository, in such a way that unittests weren't counted in the coverage report.
+\
+\
+Student s204141 restructured make_dataset to be class oriented and fixed vital bugs, also changed the download from kaggle to google buckets. Implemented, get_dataloader and the custom collate function.
+Set up dvc and uploaded data  to the bucket.
+Wrote the data utils file.
+Did profiling and wrote the make commands for docker and training.
+Wrote the train docker file and trained the models.
+Implemented pre-commit.
+\
+\
