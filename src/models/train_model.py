@@ -47,9 +47,7 @@ def main(config_file: str):
     # Creates initial dataset files
     creator = CreateData()
     creator.create()
-    dl_train = creator.get_data_loader(
-        "train",
-    )
+    dl_train = creator.get_data_loader("train", **config.dl)
     dl_val = creator.get_data_loader("val", **config.dl)
 
     model = FakeNewsClassifier(

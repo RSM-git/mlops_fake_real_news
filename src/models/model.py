@@ -21,7 +21,8 @@ class FakeNewsClassifier(pl.LightningModule):
         """
 
         Args:
-            model_type (str): name of the transformer model to use, see https://huggingface.co/models
+            model_type (str): name of the transformer model to use
+                see https://huggingface.co/models
             num_classes (int): number of classes the model should predict
             lr (float): learning rate for the optimizer
         """
@@ -90,7 +91,6 @@ class FakeNewsClassifier(pl.LightningModule):
 
         predictions = self.model(input_ids, attention_mask).logits
         loss = self.criterion(predictions, labels)
-        # predictions = logits.argmax(dim=1)
 
         self.log("train_loss", loss)
         self.training_accuracy(predictions, labels)
@@ -107,7 +107,8 @@ class FakeNewsClassifier(pl.LightningModule):
         """necessary for the trainer to perform a validation step
 
         Args:
-            batch (dict): dictionary containing keys "input_ids", "attention_mask", "label"
+            batch (dict): dictionary containing keys "input_ids",
+                "attention_mask", "label"
             batch_idx (int): index of the batch
 
         Returns:
@@ -119,7 +120,6 @@ class FakeNewsClassifier(pl.LightningModule):
 
         predictions = self.model(input_ids, attention_mask).logits
         loss = self.criterion(predictions, labels)
-        # predictions = logits.argmax(dim=1) Do not need to compute argmax as it is done in the accuracy metric
 
         self.log("val_loss", loss)
         self.velidation_accuracy(predictions, labels)
@@ -129,13 +129,13 @@ class FakeNewsClassifier(pl.LightningModule):
             on_epoch=True,
             on_step=True,
         )
-        return loss
 
     def test_step(self, batch: dict, batch_idx: int) -> torch.Tensor:
         """necessary for the trainer to perform a test step
 
         Args:
-            batch (dict): dictionary containing keys "input_ids", "attention_mask", "label"
+            batch (dict): dictionary containing keys "input_ids",
+                "attention_mask", "label"
             batch_idx (int): index of the batch
 
         Returns:
