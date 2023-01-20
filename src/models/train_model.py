@@ -14,7 +14,7 @@ from src.utils import load_yaml, upload_blob
 
 
 @click.command()
-@click.option("--config_file", type=str, default="train_cpu.yaml")
+@click.option("--config_file", type=str, default="debug_cpu.yaml")
 def main(config_file: str):
     """trains the model based on the parameters of the
     config file

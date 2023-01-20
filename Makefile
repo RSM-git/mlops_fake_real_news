@@ -50,6 +50,12 @@ train:
 train_gpu:
 	$(PYTHON_INTERPRETER) src/models/train_model.py --config_file train_gpu.yaml
 
+debug:
+	$(PYTHON_INTERPRETER) src/models/train_model.py --config_file debug_cpu.yaml
+
+create_profile:
+	python -m cProfile -o train_profile.prof src/models/train_model.py
+
 profile_train:
 	snakeviz train_profile.prof
 

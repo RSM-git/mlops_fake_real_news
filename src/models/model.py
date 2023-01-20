@@ -29,8 +29,12 @@ class FakeNewsClassifier(pl.LightningModule):
         super().__init__()
         self.model = get_model(model_type, num_labels=num_classes)
         self.criterion = nn.CrossEntropyLoss()
-        self.training_accuracy = torchmetrics.Accuracy(task="binary")
-        self.validation_accuracy = torchmetrics.Accuracy(task="binary")
+        # self.training_accuracy = torchmetrics.Accuracy(task="binary")
+        self.training_accuracy = torchmetrics.Accuracy(task="multiclass", num_classes=2)
+        # self.validation_accuracy = torchmetrics.Accuracy(task="binary")
+        self.validation_accuracy = torchmetrics.Accuracy(
+            task="multiclass", num_classes=2
+        )
         self.lr = lr
         self.max_length = 80
 
@@ -122,7 +126,7 @@ class FakeNewsClassifier(pl.LightningModule):
         loss = self.criterion(predictions, labels)
 
         self.log("val_loss", loss)
-        self.velidation_accuracy(predictions, labels)
+        self.validation_accuracy(predictions, labels)
         self.log(
             "val_accuracy",
             self.validation_accuracy,

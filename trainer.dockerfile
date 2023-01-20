@@ -21,7 +21,7 @@ COPY models/ models/
 COPY reports/ reports/
 COPY .env .env
 COPY configs/ configs/
-COPY corded-pivot-374409-dbccae470422.json corded-pivot-374409-dbccae470422.json
+COPY  corded-pivot-374409-d64b3d69468f.json corded-pivot-374409-d64b3d69468f.json
 
 # entrypoint
 ENTRYPOINT ["python3", "-u", "src/models/train_model.py", "--config_file", "debug_cpu.yaml"]
