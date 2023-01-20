@@ -367,10 +367,10 @@ We used a Docker image for training, and one for prediction/inference. The train
 <br>
 Link to:
 Predictor Docker file: <br>
-https://github.com/RSM-git/mlops_fake_real_news/blob/report/predictor.dockerfile
+https://github.com/RSM-git/mlops_fake_real_news/blob/main/predictor.dockerfile
 
 Trainer Docker file:<br>
-https://github.com/RSM-git/mlops_fake_real_news/blob/report/trainer.dockerfile
+https://github.com/RSM-git/mlops_fake_real_news/blob/main/trainer.dockerfile
 
 ### Question 16
 
