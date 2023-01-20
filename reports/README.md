@@ -347,13 +347,13 @@ We ran experiments with the following hyper parameters
 All hyperparameters with the exception of limit_train_batches were kept the same across experiments. This was done to track how it would impact the model using smaller fractions of the data. Through out these experiments we tracked the training accuracy, which is important as it reflects whether the model is able to fit to the training data or not. Additionally the validation accuracy was tracked as it shows how well the model is able to generalize to unseen examples. Lastly we tracked the training and validation loss of the model, of which the validation loss is especially important, since an early stopping callback was implemented and as we were able to tell that the quality of the model deteriorated. Below are figures containing the experiments for different fractions of training data supplied to the model. Not all of the models were able to train the full 5 epochs due to the early stopping.
 
 1% training data:
-![](figures/experiment_acc1.png)
+![](figures/experiment1.png)
 
 10% training data:
-![](figures/experiment_acc10.png)
+![](figures/experiment10.png)
 
 20% training data:
-![](figures/experiment_acc20.png)
+![](figures/experiment20.png)
 
 As one would expect, the validation accuracy increases when using a larger percentile of the data, which broadens the space of inputs the model is able to correctly classify and as such reduces overfitting.
 
