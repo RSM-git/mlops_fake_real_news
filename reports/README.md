@@ -131,6 +131,8 @@ s204119, s204112, s204135, s204141
 
 We chose to work with the huggingface transformers framework to perform the natural language processing task of classifying fake or real news articles, based on their titles. From huggingface we use a transformer model, specifically ALBERT, alongside its corresponding tokenizer. The tokenizer encodes the piece of text, we wish to use for our classification task, such that the transformer model can comprehend it.
 
+We also used the PyTorch Lightning framework to reduce boilerplate code.
+
 ## Coding environment
 
 > In the following section we are interested in learning more about you local development environment.
@@ -165,9 +167,9 @@ Specifically, they would run ```pip install -r requirements.txt``` inside of the
 > *experiments.*
 > Answer:
 
-We did utilize the Cookiecutter template. From /src/data/ we created the raw and processed datasets, and put them in the /data/ folder. The model checkpoints were saved in the /models/ folder. The model specification-, training- , and prediction- files were located in the /src/models/ folder. Most code from here is added to the root folder, or added in new folders, also in the root.
+We did utilize the Cookiecutter template. From `/src/data/` we created the raw and processed datasets, and put them in the `/data/` folder. The model checkpoints were saved in the `/models/` folder. The model specification-, training- , and prediction- files were located in the `/src/models/` folder. Most code from here is added to the root folder, or added in new folders, also in the root.
 We added a configs directory in root to store the configuration files.
-We also added a utils.py file to src and another utils.py to src/models
+We also added a `utils.py` file to `src` and another `utils.py` to `src/models`
 
 ### Question 6
 
@@ -202,7 +204,7 @@ To enforce these standards we used the pre-commit library which required some in
 > Answer:
 
 We implemented multiple tests, which focused on different acpects of the code. Primarily we did unittests on the dataset, because there was alot fiddeling around with it.
-While these unit tests for the data was very useful before writing the gitactions, we were unable to run them through gitactions as we have quite a few certificates that needs to be stores as github secrets, but we had trouble making it work on our repo.
+While these unit tests for the data was very useful before writing the gitactions, we were unable to run them through Git actions as we have quite a few certificates that needs to be stores as github secrets, but we had trouble making it work on our repo.
 
 ### Question 8
 
@@ -334,7 +336,10 @@ Additionally, we used seeds which in a deep learning setting is not always compl
 >
 > Answer:
 
-We performed an experiment with the following hyperparameters: ![](figures/experiment_hparams.png)
+We performed an experiment with the following hyperparameters: 
+
+![](figures/experiment_hparams.png)
+
 We kept all the hyper parameters the same except for the limit_train_batches witch makes it so the model only uses a fraction of training data.
 We tried three different values and looked at how this hyper parameter affected the validation accuracy. Since we used early stopping, not all experiments ran for the full five epochs.
 
