@@ -180,9 +180,9 @@ We also added a utils.py file to src and another utils.py to src/models
 
 We used Black Formatter which let us write a lot of code with out thinking much about the pretty setup.
 We used isort which sorts the imports, both in alphabetical order and seperate them by type.
-We used Flake8 to conform with official coding standard.
-It is important to have a guideline when programming. In larger projects code can be confusing if written with different formatting or if the quality of code is changing all the time. In our project the code quality varies, and therefore we help the ones lacking by rewriting what the meant by the code after they made it.
-To enforce these standards we used the pre-commit library which required some initial configuration to make them work together without being stuck in a loop but otherwise it worked very well.
+We used Flake8 to conform with official coding standards (PEP8).
+It is important to have a guideline when programming. In larger projects code can be confusing if written with different formatting or if the quality of code is changing all the time. In our project the code quality varies, and therefore we help the ones lacking by rewriting what was meant by the code after it was written.
+To enforce these standards we used the pre-commit library which required some initial configuration to make them work together without being stuck in a loop of Black and isort reverting each others changes.
 
 ## Version control
 
@@ -202,7 +202,7 @@ To enforce these standards we used the pre-commit library which required some in
 > Answer:
 
 We implemented multiple tests, which focused on different acpects of the code. Primarily we did unittests on the dataset, because there was alot fiddeling around with it.
-While these unit tests for the data was very useful before writing the gitactions, we were unable to run them through gitactions as we have quite a few certificates that needs to be stores as github secrets, but we had trouble making it work on our repo.
+While these unit tests for the data were very useful before implementing our Github Action workflows, we were unable to run the dataset test through Github Actions, since getting the dataset on the workflow VM, requires API authentication, which we were unable to do even with the API keys stored in Github secrets.
 
 ### Question 8
 
@@ -217,7 +217,7 @@ While these unit tests for the data was very useful before writing the gitaction
 >
 > Answer:
 
-We have a code coverage of 50%, which includes the source code and importantly excludes the test code as to not artificially boost coverage.
+We have a code coverage of 50%, which includes the source code and importantly excludes the test code as to not artificially inflate code coverage.
 We're aware that this is on the low side but a lot of the code that isn't tested are the "main" functions such as train_model which might be difficult to implement as a unit test as these functions combines the code of which much of it should have been unit tested.
 Even if 100% of our code is covered, we can not guarantee that all edge/corner cases are covered. This is why we should take the coverage measure with a grain of salt.
 
@@ -234,9 +234,9 @@ Even if 100% of our code is covered, we can not guarantee that all edge/corner c
 >
 > Answer:
 
-Every time we started working on a new feature in the project we created a new branch. After we had implementet that thing and merged we deleted the branch, and created a new one when we started on a new task. We implemented that every pull request should be verified by another member of the group, in that way one person should not be able to mess things up, example like uploading all the data, or deleting main things. Before the pull request even got to Github we checked the code with pre-commit test.
-We also had a git action to run the unit tests and denied merging until all passed.
-We strifed for trunk-based development which seems effective for such a fast paced project.
+Every time we started working on a new feature in the project we created a new branch. After we had implementet that thing and merged we deleted the branch, and created a new one when we started on a new task. We implemented that every pull request should be verified by another member of the group, in that way one person should not be able to mess things up, example like uploading all the data, or deleting/breaking important features. Before the pull request even got to Github we checked the code with pre-commit test.
+We also had a Github action to run the unit tests and denied merging until all passed.
+We strived for trunk-based development which seems effective for such a fast paced project.
 
 ### Question 10
 
@@ -251,10 +251,10 @@ We strifed for trunk-based development which seems effective for such a fast pac
 >
 > Answer:
 
-We did use dvc and used it initially to push the data to the google bucket.
-Since we only pushed the raw data which remained unchanged throughout the project, there wasn't much use for dvc.
+We did use DVC and used it initially to push the data to the GCP bucket.
+Since we only pushed the raw data which remained unchanged throughout the project, there wasn't much use for DVC.
 In a business scenario the data is much more likely to change. If the company is developing a new project for which data is not readily available, they have to create it themselves and by that, the data is prone to changes in which case data version control is very important.
-You need to be able to easily discern if improvements or degradations is caused by changes in the data or in the model architecture.
+Using data version control allows one to quickly be able to discern if there are improvements or deteriation of the data. Additionally it can be tracked as a core parameter of ones model as it might change significantly due to changes in the data.
 
 ### Question 11
 
@@ -298,7 +298,7 @@ We also update services on the cloud on each push to the Github repository as pa
 > Answer:
 
 We used config yaml files to organize experiments.
-We loaded the yaml file and passed it to our wandb logger such that all hyperparameters were logged in wandb.
+We loaded the config file and passed it to our wandb logger such that all hyperparameters were logged in W&B.
 This is the reason why we decided not to use hydra as wandb can already do everything that we wanted from hydra with the added advantage of having everything stored online.
 
 
@@ -315,8 +315,7 @@ This is the reason why we decided not to use hydra as wandb can already do every
 >
 > Answer:
 
-We used config files logged to wandb to ensure that we always could choose the same hyperparameters.
-Additionally, we used seeds which in a deep learning setting is not always completely deterministic, but it certainly helps mimic behavior.
+We made use of config yaml files, which were passed to the wandb logger, which logs the config file to wandb, to reproduce an experiment one would simply navigate to the wandb experiment run of interest and download the corresponding config file. To further ensure reproducibility we ensured that our experiments were seeded, to make sure that randomness was not a factor.
 
 
 ### Question 14
@@ -335,6 +334,21 @@ Additionally, we used seeds which in a deep learning setting is not always compl
 > Answer:
 
 We performed an experiment with the following hyperparameters: ![](figures/experiment_hparams.png)
+| batch_size          | 36    |
+|---------------------|-------|
+| num_workers         | 8     |
+|---------------------|-------|
+| learning_rate       | 2e-6  |
+|---------------------|-------|
+| accelerator         | "gpu" |
+|---------------------|-------|
+| limit_train_batches | 0.01  |
+|---------------------|-------|
+| limit_val_batches   | 1     |
+|---------------------|-------|
+| max_epochs          | 5     |
+|---------------------|-------|
+
 We kept all the hyper parameters the same except for the limit_train_batches witch makes it so the model only uses a fraction of training data.
 We tried three different values and looked at how this hyper parameter affected the validation accuracy. Since we used early stopping, not all experiments ran for the full five epochs.
 
@@ -347,7 +361,7 @@ We tried three different values and looked at how this hyper parameter affected 
 20% training data:
 ![](figures/experiment_acc20.png)
 
-As one might expect, the validation accuracy increases the more training data we use as it makes it more difficult to overfitting.
+As one would expect, the validation accuracy increases when using a larger percentile of the data, which broadens the space of inputs the model is able to correctly classify and as such reduces overfitting.
 
 ### Question 15
 
