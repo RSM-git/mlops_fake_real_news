@@ -32,7 +32,7 @@ def download_blob(bucket_name, source_blob_name, destination_file_name):
     # destination_file_name = "local/path/to/file"
 
     credentials = service_account.Credentials.from_service_account_file(
-        "corded-pivot-374409-dbccae470422.json"
+        "corded-pivot-374409-d64b3d69468f.json"
     )
 
     storage_client = storage.Client(credentials=credentials)
