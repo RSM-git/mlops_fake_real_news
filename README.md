@@ -1,3 +1,4 @@
+[![Run tests](https://github.com/RSM-git/mlops_fake_real_news/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/RSM-git/mlops_fake_real_news/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/RSM-git/mlops_fake_real_news/branch/main/graph/badge.svg?token=6FV3FES5SJ)](https://codecov.io/gh/RSM-git/mlops_fake_real_news)
 ## Machine Learning Operations project description - NLP with fake and real news articles
 
