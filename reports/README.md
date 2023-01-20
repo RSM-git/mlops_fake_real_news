@@ -131,6 +131,8 @@ s204119, s204112, s204135, s204141
 
 We chose to work with the huggingface transformers framework to perform the natural language processing task of classifying fake or real news articles, based on their titles. From huggingface we use a transformer model, specifically ALBERT, alongside its corresponding tokenizer. The tokenizer encodes the piece of text, we wish to use for our classification task, such that the transformer model can comprehend it.
 
+We also used the PyTorch Lightning framework to reduce boilerplate code.
+
 ## Coding environment
 
 > In the following section we are interested in learning more about you local development environment.
@@ -165,9 +167,9 @@ Specifically, they would run ```pip install -r requirements.txt``` inside of the
 > *experiments.*
 > Answer:
 
-We did utilize the Cookiecutter template. From /src/data/ we created the raw and processed datasets, and put them in the /data/ folder. The model checkpoints were saved in the /models/ folder. The model specification-, training- , and prediction- files were located in the /src/models/ folder. Most code from here is added to the root folder, or added in new folders, also in the root.
+We did utilize the Cookiecutter template. From `/src/data/` we created the raw and processed datasets, and put them in the `/data/` folder. The model checkpoints were saved in the `/models/` folder. The model specification-, training- , and prediction- files were located in the `/src/models/` folder. Most code from here is added to the root folder, or added in new folders, also in the root.
 We added a configs directory in root to store the configuration files.
-We also added a utils.py file to src and another utils.py to src/models
+We also added a `utils.py` file to `src` and another `utils.py` to `src/models`
 
 ### Question 6
 
@@ -202,6 +204,7 @@ To enforce these standards we used the pre-commit library which required some in
 > Answer:
 
 We implemented multiple tests, which focused on different acpects of the code. Primarily we did unittests on the dataset, because there was alot fiddeling around with it.
+
 While these unit tests for the data were very useful before implementing our Github Action workflows, we were unable to run the dataset test through Github Actions, since getting the dataset on the workflow VM, requires API authentication, which we were unable to do even with the API keys stored in Github secrets.
 
 ### Question 8
@@ -346,6 +349,7 @@ We ran experiments with the following hyper parameters
 
 All hyperparameters with the exception of limit_train_batches were kept the same across experiments. This was done to track how it would impact the model using smaller fractions of the data. Through out these experiments we tracked the training accuracy, which is important as it reflects whether the model is able to fit to the training data or not. Additionally the validation accuracy was tracked as it shows how well the model is able to generalize to unseen examples. Lastly we tracked the training and validation loss of the model, of which the validation loss is especially important, since an early stopping callback was implemented and as we were able to tell that the quality of the model deteriorated. Below are figures containing the experiments for different fractions of training data supplied to the model. Not all of the models were able to train the full 5 epochs due to the early stopping.
 
+
 1% training data:
 ![](figures/experiment1.png)
 
@@ -369,15 +373,16 @@ As one would expect, the validation accuracy increases when using a larger perce
 > *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
+
 We used a Docker image for training, and one for prediction/inference. The trainer file utilizes most files. It needs data files, model files, config files, and other kinds of utility files. The predictor on the other hand only needs to load the model weights to the model. The weights themselves are saved into a GCP bucket, which is can be accessed by the Cloud Run service and can be loaded when the container is built.
 
 <br>
 Link to:
 Predictor Docker file: <br>
-https://github.com/RSM-git/mlops_fake_real_news/blob/report/predictor.dockerfile
+https://github.com/RSM-git/mlops_fake_real_news/blob/main/predictor.dockerfile
 
 Trainer Docker file:<br>
-https://github.com/RSM-git/mlops_fake_real_news/blob/report/trainer.dockerfile
+https://github.com/RSM-git/mlops_fake_real_news/blob/main/trainer.dockerfile
 
 ### Question 16
 
