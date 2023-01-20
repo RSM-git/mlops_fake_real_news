@@ -361,6 +361,7 @@ As one might expect, the validation accuracy increases the more training data we
 > *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
+      
 We used a Docker image for training, and one for prediction/inference. The trainer file utilizes most files. It needs data files, model files, config files, and other kinds of utility files. The predictor on the other hand only needs to load the model weights to the model. The weights themselves are saved into a bucket, which is obviously located outside the Docker container.
 
 <br>
