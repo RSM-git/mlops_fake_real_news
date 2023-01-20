@@ -333,24 +333,18 @@ We made use of config yaml files, which were passed to the wandb logger, which l
 >
 > Answer:
 
-We performed an experiment with the following hyperparameters: ![](figures/experiment_hparams.png)
+We ran experiments with the following hyper parameters
+
 | batch_size          | 36    |
 |---------------------|-------|
 | num_workers         | 8     |
-|---------------------|-------|
 | learning_rate       | 2e-6  |
-|---------------------|-------|
 | accelerator         | "gpu" |
-|---------------------|-------|
 | limit_train_batches | 0.01  |
-|---------------------|-------|
 | limit_val_batches   | 1     |
-|---------------------|-------|
 | max_epochs          | 5     |
-|---------------------|-------|
 
-We kept all the hyper parameters the same except for the limit_train_batches witch makes it so the model only uses a fraction of training data.
-We tried three different values and looked at how this hyper parameter affected the validation accuracy. Since we used early stopping, not all experiments ran for the full five epochs.
+All hyperparameters with the exception of limit_train_batches were kept the same across experiments. This was done to track how it would impact the model using smaller fractions of the data. Through out these experiments we tracked the training accuracy, which is important as it reflects whether the model is able to fit to the training data or not. Additionally the validation accuracy was tracked as it shows how well the model is able to generalize to unseen examples. Lastly we tracked the training and validation loss of the model, of which the validation loss is especially important, since an early stopping callback was implemented and as we were able to tell that the quality of the model deteriorated. Below are figures containing the experiments for different fractions of training data supplied to the model. Not all of the models were able to train the full 5 epochs due to the early stopping.
 
 1% training data:
 ![](figures/experiment_acc1.png)
@@ -375,7 +369,7 @@ As one would expect, the validation accuracy increases when using a larger perce
 > *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
-We used a Docker image for training, and one for prediction/inference. The trainer file utilizes most files. It needs data files, model files, config files, and other kinds of utility files. The predictor on the other hand only needs to load the model weights to the model. The weights themselves are saved into a bucket, which is obviously located outside the Docker container.
+We used a Docker image for training, and one for prediction/inference. The trainer file utilizes most files. It needs data files, model files, config files, and other kinds of utility files. The predictor on the other hand only needs to load the model weights to the model. The weights themselves are saved into a GCP bucket, which is can be accessed by the Cloud Run service and can be loaded when the container is built.
 
 <br>
 Link to:
@@ -424,7 +418,7 @@ We used the following services:
 - Cloud Build
 - (Experimenting with Compute Engines)
 
-Cloud Run is a serverless option for deploying projects. We've used this for inference. Buckets are used to store data files, as well as the model weights, making it easily accesible for the CLoud Run application. We've automatically built Docker images using Cloud Build, and pushed the containers to the container registry. Cloud Build is also responsible for updating the container used for our Cloud Run app. We tried to train the model using Engines, but had technical troubles; hence we continued training locally on GPUs.
+Cloud Run is a serverless option for deploying projects. We've used this for inference and deployment. Buckets are used to store data files, as well as the model weights, making it easily accesible for the Cloud Run application. We've automatically built Docker images using Cloud Build, and pushed the containers to the container registry. Cloud Build is also responsible for updating the container used for our Cloud Run app. We tried to train the model using Engines, but had technical troubles; hence we continued training locally on GPUs.
 
 ### Question 18
 
@@ -439,9 +433,9 @@ Cloud Run is a serverless option for deploying projects. We've used this for inf
 >
 > Answer:
 
-To train in the cloud, we used a e2-medium x86/64 cpu machine. We hosted it on europe-west1-b and built it from the train docker image that we had already pushed to the container registry.
+To train in the Cloud, we used a e2-medium x86/64 cpu machine. We hosted it on europe-west1-b and built it from the train docker image that we had already pushed to the container registry.
 This made it really easy to use since we just had to start the machine and it would begin running the container immediately and push the model the bucket.
-While we had shown that we were able to train in the cloud, we chose to do the experiments locally on a gpu machine as this sped up training significantly and reduced the cost.
+While we had shown that we were able to train in the Cloud, we chose to do the experiments locally on a GPU machine as this sped up training significantly and reduced the cost.
 
 ### Question 19
 
@@ -615,7 +609,7 @@ Student s204135 was in charge of implementing the PyTorch Lightning Module and i
 \
 \
 Student s204141 restructured make_dataset to be class oriented and fixed vital bugs, also changed the download from kaggle to google buckets. Implemented, get_dataloader and the custom collate function.
-Set up dvc and uploaded data  to the bucket.
+Set up dvc and uploaded data to the bucket.
 Wrote the data utils file.
 Did profiling and wrote the make commands for docker and training.
 Wrote the train docker file and trained the models.
