@@ -351,13 +351,13 @@ All hyperparameters with the exception of limit_train_batches were kept the same
 
 
 1% training data:
-![](figures/experiment_acc1.png)
+![](figures/experiment1.png)
 
 10% training data:
-![](figures/experiment_acc10.png)
+![](figures/experiment10.png)
 
 20% training data:
-![](figures/experiment_acc20.png)
+![](figures/experiment20.png)
 
 As one would expect, the validation accuracy increases when using a larger percentile of the data, which broadens the space of inputs the model is able to correctly classify and as such reduces overfitting.
 
